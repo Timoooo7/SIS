@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('menu_item', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('volume')->nullable();
+            $table->string('volume_unit')->nullable();
+            $table->string('mass')->nullable();
+            $table->string('mass_unit')->nullable();
+            $table->integer('price');
+            $table->tinyInteger('sale');
+            $table->integer('stand_id');
+            $table->softDeletes();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('menu_item');
+    }
+};

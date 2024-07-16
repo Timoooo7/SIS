@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Middleware\EnsureMethodMatch;
-use App\Http\Middleware\EnsureRouteExist;
 use App\Http\Middleware\EnsureUserHasRole;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;

@@ -921,10 +921,21 @@
                     @if (Route::has('login'))
                         <nav class="-mx-3 flex flex-1 justify-end">
                             @auth
-                                <a href="{{ route('dashboard') }}"
-                                    class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#218ECD]">
-                                    Dashboard
-                                </a>
+                                @if (Auth::user()->roles_id == null)
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit"
+                                            class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#218ECD]">
+                                            Log out
+                                        </button>
+                                        @csrf
+                                    </form>
+                                @else
+                                    <a href="{{ route('dashboard') }}"
+                                        class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#218ECD]">
+                                        Dashboard
+                                    </a>
+                                @endif
                             @else
                                 <a href="{{ route('login') }}"
                                     class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#218ECD]">

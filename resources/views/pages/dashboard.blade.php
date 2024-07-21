@@ -129,22 +129,18 @@
                             $financials = $staff->where('roles_id', 2);
                             $operationals = $staff->where('roles_id', 3);
                             $staffs = $staff->where('roles_id', 4);
-                            function person($array)
-                            {
-                                return count($array) > 1 ? ' persons' : ' person';
-                            }
                             ?>
                             <div class="fs-6 my-1">Chief Executive Officer & Co :
-                                <span class="float-end">{{ count($chiefs) . person($chiefs) }}</span>
+                                <span class="float-end">{{ count($chiefs) . ' person(s)' }}</span>
                             </div>
                             <div class="fs-6 my-1">Financial Officer :
-                                <span class="float-end">{{ count($financials) . person($financials) }}</span>
+                                <span class="float-end">{{ count($financials) . ' person(s)' }}</span>
                             </div>
                             <div class="fs-6 my-1">Operational Officer :
-                                <span class="float-end">{{ count($operationals) . person($operationals) }}</span>
+                                <span class="float-end">{{ count($operationals) . ' person(s)' }}</span>
                             </div>
                             <div class="fs-6 my-1">Staff :
-                                <span class="float-end">{{ count($staffs) . person($staffs) }}</span>
+                                <span class="float-end">{{ count($staffs) . ' person(s)' }}</span>
                             </div>
                         </div>
                     </div>

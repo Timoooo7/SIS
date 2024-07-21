@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
                     'phone' => '089626124115',
                     'password' => '$2y$12$17Fy1AkLcPTCq8qKtn8TdOPgecTSTI9c26wHe57YqQuPxtOWA4yU2',
                     'roles_id' => 1,
+                    'email_verified_at' => now(),
                     'created_at' => now()
                 ],
                 [
@@ -32,6 +33,7 @@ class DatabaseSeeder extends Seeder
                     'phone' => '089626124116',
                     'password' => '$2y$12$17Fy1AkLcPTCq8qKtn8TdOPgecTSTI9c26wHe57YqQuPxtOWA4yU2',
                     'roles_id' => 2,
+                    'email_verified_at' => now(),
                     'created_at' => now(),
                 ],
                 [
@@ -40,6 +42,7 @@ class DatabaseSeeder extends Seeder
                     'phone' => '089626124117',
                     'password' => '$2y$12$17Fy1AkLcPTCq8qKtn8TdOPgecTSTI9c26wHe57YqQuPxtOWA4yU2',
                     'roles_id' => 3,
+                    'email_verified_at' => now(),
                     'created_at' => now(),
                 ],
                 [
@@ -48,6 +51,7 @@ class DatabaseSeeder extends Seeder
                     'phone' => '089626124118',
                     'password' => '$2y$12$17Fy1AkLcPTCq8qKtn8TdOPgecTSTI9c26wHe57YqQuPxtOWA4yU2',
                     'roles_id' => 4,
+                    'email_verified_at' => now(),
                     'created_at' => now(),
                 ],
                 [
@@ -56,6 +60,7 @@ class DatabaseSeeder extends Seeder
                     'phone' => '089626124119',
                     'password' => '$2y$12$17Fy1AkLcPTCq8qKtn8TdOPgecTSTI9c26wHe57YqQuPxtOWA4yU2',
                     'roles_id' => 4,
+                    'email_verified_at' => now(),
                     'created_at' => now(),
                 ],
             ]

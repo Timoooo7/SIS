@@ -85,7 +85,6 @@
     <script>
         // Show Password
         function show_password(input_id) {
-
             var password = document.getElementById(input_id);
             if (password.type === "password") {
                 password.type = "text";

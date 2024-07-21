@@ -52,9 +52,8 @@
                 @endforeach
             </div>
 
-
+            {{-- Off Canvas Sidebar --}}
             @if (isset($navs))
-                {{-- Off Canvas Sidebar --}}
                 <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="appSideBar"
                     aria-labelledby="offcanvasDarkLabel" style="width: 250px;">
                     <div class="offcanvas-header mt-2">

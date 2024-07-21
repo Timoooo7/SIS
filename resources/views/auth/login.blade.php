@@ -14,10 +14,10 @@
         </div>
 
         <!-- Password -->
-        <div class="mt-4">
+        <div class="mt-1">
             <x-input-label for="password" :value="__('Password')" />
 
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required
+            <x-text-input id="idlucu" class="block mt-1 w-full" type="password" name="password" required
                 autocomplete="current-password" />
 
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
@@ -25,10 +25,10 @@
 
         <!-- Show Password -->
         <div class="block mt-2">
-            <label for="show_password" class="inline-flex items-center">
-                <input id="show_password" type="checkbox"
+            <label for="show_password_1" class="inline-flex items-center">
+                <input id="show_password_1" type="checkbox" role="switch"
                     class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
-                    onclick="show_password('password')">
+                    onchange="show_password('idlucu')">
                 <span class="ms-2 text-sm text-gray-600">{{ __('Show Password') }}</span>
             </label>
         </div>

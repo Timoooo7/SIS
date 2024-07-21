@@ -36,31 +36,54 @@
             </h3>
         </div>
 
+        {{-- Notification Toast --}}
+        @if (session()->has('notif'))
+            <?php
+            if (session()->get('notif')['type'] == 'danger') {
+                $type = 'danger';
+            } elseif (session()->get('notif')['type'] == 'warning') {
+                $type = 'warning';
+            } else {
+                $type = 'primary';
+            }
+            ?>
+            <div class="toast-container top-15 start-50 translate-middle-x p-3">
+                <div class="toast bg-{{ $type }}-subtle border border-top-0 border-start-0 border-end-0 border-{{ $type }} "
+                    role="alert" aria-live="assertive" aria-atomic="true" id="toast_notification">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            {{ session()->get('notif')['message'] }}
+                        </div>
+                        <button type="button" class="ms-auto btn-close me-2 m-auto" data-bs-dismiss="toast"
+                            aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <div
-            class="sm:max-w-md mx-2 mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg border-top border-primary-subtle">
+            class="sm:max-w-md mx-2 my-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg border-top border-primary-subtle">
             {{ $slot }}
+
+            <div class="d-flex justify-content-between align-items-center py-4">
+                <div class="border w-25"></div>
+                <div class="f-6">or Login with</div>
+                <div class="border w-25"></div>
+            </div>
+
+            <div class="row">
+                <div class="col ">
+                    <a href="{{ route('google.auth') }}" class="btn btn-outline-primary mx-20">Google Account</a>
+                </div>
+            </div>
         </div>
     </div>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
-    // $(document).ready(function() {
-
-    //     $("#show_password").change(function() {
-    //         var password = document.getElementById('password');
-    //         if ($(this).is(':checked')) {
-    //             password.type = "text";
-    //         } else {
-    //             password.type = "password";
-    //         }
-
-    //     });
-
-    // });
-
     // Show Password
     function show_password(input_id) {
-        var password = document.getElementById('password');
+        var password = document.getElementById(input_id);
         if (password.type === "password") {
             password.type = "text";
         } else {

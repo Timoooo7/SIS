@@ -28,7 +28,11 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false))->with('notif', ['type' => 'info', 'message' => 'Hi ' . Auth::user()->name . ', welcome to SEEO Information System']);
+        if (Auth::user()->roles_id !== null) {
+            return redirect()->intended(route('dashboard', absolute: false))->with('notif', ['type' => 'info', 'message' => 'Hi ' . Auth::user()->name . ', welcome to SEEO Information System']);
+        } else {
+            return redirect()->intended(route('intro', absolute: false))->with('notif', ['type' => 'info', 'message' => 'Hi ' . Auth::user()->name . ', welcome to Blaterian']);
+        }
     }
 
     /**

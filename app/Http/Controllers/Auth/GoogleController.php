@@ -22,7 +22,6 @@ class GoogleController extends Controller
     function callback()
     {
         $user = Socialite::driver('google')->user();
-        dd($user);
         try {
             $findUser = User::where('id_google', $user->id)->first();
             if ($findUser) {

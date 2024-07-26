@@ -95,7 +95,6 @@ class UserController extends Controller
         $input = $request->input();
         $length = count($input);
         $deleted_users = '';
-        // dd($input);
         for ($i = 0; $i < $length - 3; $i++) {
             $id_key = array_keys($input)[$i];
             if (Str::startsWith($id_key, 'id')) {

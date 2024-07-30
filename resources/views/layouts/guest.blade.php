@@ -22,6 +22,47 @@
 <body class="font-sans text-gray-900 antialiased">
     <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 bg-gray-100"
         style="background: url('/images/welcome_background.png'); background-size: cover;">
+
+
+        <header class=" border-0 bg-transparent">
+            <?php
+            // Error validation trigger toast
+            if (!empty($errors->all())) {
+                $err_messages = '';
+                foreach ($errors->all() as $err) {
+                    $err_messages .= ' ' . $err;
+                }
+                session()->put('notif', ['type' => 'warning', 'message' => $err_messages]);
+            }
+            ?>
+
+            {{-- Notification Toast --}}
+            @if (session()->has('notif'))
+                <?php
+                if (session()->get('notif')['type'] == 'danger') {
+                    $type = 'danger';
+                } elseif (session()->get('notif')['type'] == 'warning') {
+                    $type = 'warning';
+                } else {
+                    $type = 'primary';
+                }
+                ?>
+                <div class="toast-container top-15 start-50 translate-middle-x p-3">
+                    <div class="toast bg-{{ $type }}-subtle border border-top-0 border-start-0 border-end-0 border-{{ $type }} "
+                        role="alert" aria-live="assertive" aria-atomic="true" id="toast_notification">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                {{ session()->get('notif')['message'] }}
+                            </div>
+                            <button type="button" class="ms-auto btn-close me-2 m-auto" data-bs-dismiss="toast"
+                                aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+            @endif
+        </header>
+
+
         <div>
             <a href="/" class="text-center">
                 <x-application-logo class="fill-current text-gray-500 mx-auto" />
@@ -74,18 +115,35 @@
             </div>
         </div>
     </div>
-</body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script>
-    // Show Password
-    function show_password(input_id) {
-        var password = document.getElementById(input_id);
-        if (password.type === "password") {
-            password.type = "text";
-        } else {
-            password.type = "password";
+    <?php session()->pull('notif'); ?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        // Show Password
+        function show_password(input_id) {
+            var password = document.getElementById(input_id);
+            if (password.type === "password") {
+                password.type = "text";
+            } else {
+                password.type = "password";
+            }
         }
-    }
-</script>
+
+        // Toast Script
+        document.addEventListener("DOMContentLoaded", function() {
+            var element = document.getElementById("toast_notification");
+
+            // Create toast instance
+            var myToast = new bootstrap.Toast(element);
+
+            // Showing toast
+            myToast.show();
+        });
+
+        // Tooltip
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    </script>
+</body>
 
 </html>

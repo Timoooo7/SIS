@@ -35,7 +35,7 @@ class RegisteredGoogleUserController extends Controller
         ]);
 
         $user = User::where('id_google', '=', $request->id_google)->first();
-        if ($user->password == 'empty') {
+        if ($user->password) {
             $user->update([
                 'phone' => $request->phone,
                 'password' => Hash::make($request->password),

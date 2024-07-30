@@ -27,8 +27,8 @@ class AuthenticatedSessionController extends Controller
     {
         $findUserMail = User::where('email', '=', $request->email)->first();
 
-        if (!$findUserMail) {
-            return redirect()->route('register.google', ['id' => $findUserMail]);
+        if (!$findUserMail->password) {
+            return redirect()->route('register.google', ['id' => $findUserMail->id_google])->with('notif', ['type' => 'warning', 'message' => 'You must complete the registration before Login.']);
         }
 
         $request->authenticate();

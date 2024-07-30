@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BlaterianBalance;
+use App\Models\FoodsIncome;
 use App\Models\MenuItem;
 use App\Models\Stand;
 use App\Models\StandSales;
@@ -176,8 +178,38 @@ class SalesController extends Controller
         }
         $stand->sale_validation = $request->input('operational_id');
         $stand->save();
-        $standController = new StandController();
-        $standController->refreshStandCashFlow($stand_id);
-        return back()->with('notif', ['type' => 'info', 'message' => $stand->name . ' sale items are validated.']);
+
+        // update necessary data
+        $this->updateStandIncome($stand_id);
+
+        return $request->input('operational_id') !== '0' ? back()->with('notif', ['type' => 'info', 'message' => $stand->name . ' sale items are VALIDATED.']) : back()->with('notif', ['type' => 'warning', 'message' => $stand->name . ' sale items are UNVALIDATED.']);
+    }
+
+    /**
+     * update new stand total income.
+     * 
+     * 
+     *  @var $id is stand id, @var $add to determine add or minus 
+     */
+    public function updateStandIncome(int $id,)
+    {
+        // retrieve foods income model
+        $foodsIncome = FoodsIncome::where('category_id', '=', $id)->first();
+        // set new income
+        $new_income = StandSales::where('stand_id', '=', $id)->sum('transaction');
+
+        // update stand income
+        $stand = Stand::find($id);
+        $stand->profit += $new_income - $stand->income;
+        $stand->income = $new_income;
+        $stand->updated_at = now();
+        $stand->save();
+
+        // save foods income model
+        $foodsIncome->price = $new_income;
+        $foodsIncome->updated_at = now();
+        $foodsIncome->save();
+
+        return BlaterianBalanceController::refreshBalance();
     }
 }

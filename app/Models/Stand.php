@@ -69,6 +69,14 @@ class Stand extends Model
     }
 
     /**
+     * The person that in charge of the stand.
+     */
+    public function menu_validator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'menu_lock');
+    }
+
+    /**
      * The expenses that belong to the stand.
      */
     public function expense(): HasMany

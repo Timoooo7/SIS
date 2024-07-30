@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('mass')->nullable();
             $table->string('mass_unit')->nullable();
             $table->integer('price');
-            $table->tinyInteger('sale');
+            $table->tinyInteger('sale')->default(0);
             $table->integer('stand_id');
             $table->softDeletes();
             $table->timestamps();

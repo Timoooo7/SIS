@@ -15,7 +15,7 @@ class UserController extends Controller
      */
     public function index(): View
     {
-        $users = User::where('roles_id', '!=', null)->all();
+        $users = User::where('roles_id', '!=', null)->get();
         $data = [
             'sidebar' => 'seeo',
             'total' => count($users),

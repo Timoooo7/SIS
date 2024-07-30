@@ -11,15 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sales', function (Blueprint $table) {
+        Schema::create('blaterian_balance', function (Blueprint $table) {
             $table->id();
-            $table->tinyInteger('cashier_id');
-            $table->tinyInteger('stand_id');
-            $table->tinyInteger('menu_id');
-            $table->tinyInteger('amount');
-            $table->integer('discount')->default(0);
-            $table->integer('transaction');
-            $table->string('customer')->nullable();
+            $table->integer('balance')->default(0);
+            $table->integer('expense')->default(0);
+            $table->integer('income')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });
@@ -30,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sales');
+        Schema::dropIfExists('blaterian_balance');
     }
 };

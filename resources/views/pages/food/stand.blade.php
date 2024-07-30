@@ -290,6 +290,21 @@ use Illuminate\Support\Carbon;
                         @endif
                     </div>
                     <div class="card-body py-2">
+                        <div class="row">
+                            <div class="col-lg-10">
+                                <p class="my-2 rounded-lg bg-primary text-white fw-light p-2" data-bs-toggle="tooltip"
+                                    data-bs-placement="top"
+                                    data-bs-title="This is showing the stand balance, based on validated expense and income.">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        fill="currentColor" class="bi bi-wallet2 d-inline mb-1 me-1 text-white"
+                                        viewBox="0 0 16 16">
+                                        <path
+                                            d="M12.136.326A1.5 1.5 0 0 1 14 1.78V3h.5A1.5 1.5 0 0 1 16 4.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 13.5v-9a1.5 1.5 0 0 1 1.432-1.499zM5.562 3H13V1.78a.5.5 0 0 0-.621-.484zM1.5 4a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5z" />
+                                    </svg>
+                                    {{ __('Blaterian Foods Balance : ' . Number::currency($balance->balance, in: 'IDR')) }}
+                                </p>
+                            </div>
+                        </div>
                         <div class="row ">
                             <div class="col-lg-6">
                                 <p class="my-2">{{ __('Date :') }}
@@ -344,27 +359,7 @@ use Illuminate\Support\Carbon;
                                         @endif
                                     </span>
                                 </p>
-                                <p class="my-2 rounded-lg bg-primary text-white fw-light p-2" data-bs-toggle="tooltip"
-                                    data-bs-placement="top"
-                                    data-bs-title="This is showing the stand balance, based on validated expense and income.">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                        fill="currentColor" class="bi bi-wallet2 d-inline mb-1 me-1 text-white"
-                                        viewBox="0 0 16 16">
-                                        <path
-                                            d="M12.136.326A1.5 1.5 0 0 1 14 1.78V3h.5A1.5 1.5 0 0 1 16 4.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 13.5v-9a1.5 1.5 0 0 1 1.432-1.499zM5.562 3H13V1.78a.5.5 0 0 0-.621-.484zM1.5 4a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5z" />
-                                    </svg>
-                                    @if ($stand_exist)
-                                        {{ __('Balance : ' . Number::currency($stand->balance !== null && $stand_exist ? $stand->balance : 0, in: 'IDR')) }}
-                                        <span class="text-sm float-end">
-                                            @if ($stand->sale_validation == 0)
-                                                Active
-                                            @else
-                                                <span class="text-warning px-1">Not Active.</span>
-                                            @endif
-                                        </span>
-                                    @endif
-                                    {{ __('Balance : -') }}
-                                </p>
+
                             </div>
                         </div>
                     </div>
@@ -1204,7 +1199,7 @@ use Illuminate\Support\Carbon;
                                     @endif
                                 @else
                                     <span
-                                        class="text-secondary fst-italic d-inline-block">{{ 'Menu has been locked by ' . $stand->pic->name }}</span>
+                                        class="text-secondary fst-italic d-inline-block">{{ 'Menu has been locked by ' . $stand->menu_validator->name }}</span>
                                     {{-- Operational Feature --}}
                                     @if (Auth::user()->roles_id == 3)
                                         <button type="submit"
@@ -1344,7 +1339,6 @@ use Illuminate\Support\Carbon;
                                 $i = $menu_items->perPage() * ($menu_items->currentPage() - 1) + 1;
                                 $highest_sale = $menu_items->sortBy([['sale', 'desc']])->first();
                                 $highest_id = $highest_sale !== null ? $highest_sale->id : 0;
-                                // dd($highest_id);
                                 ?>
                                 @foreach ($menu_items as $menu_item)
                                     <tr>
@@ -1357,7 +1351,7 @@ use Illuminate\Support\Carbon;
                                         <td colspan="2" class="text-center">{{ $mass }}</td>
                                         <?php $sale = $menu_item->sale > 0 ? $menu_item->sale . ' (pcs)' : '-'; ?>
                                         <td class="text-center" style="min-width: 100px">{{ $sale }}
-                                            @if ($highest_id == $menu_item->id)
+                                            @if ($highest_id == $menu_item->id && $sale !== '-')
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                     fill="currentColor"
                                                     class="bi bi-hand-thumbs-up d-inline text-success"

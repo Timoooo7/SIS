@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stand_modal', function (Blueprint $table) {
+        Schema::create('foods_expense', function (Blueprint $table) {
             $table->id();
+            $table->string('category');
+            $table->integer('category_id');
+            $table->integer('price')->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -22,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stand_modal');
+        Schema::dropIfExists('foods_expense');
     }
 };

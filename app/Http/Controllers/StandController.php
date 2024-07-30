@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BlaterianBalance;
+use App\Models\FoodsExpense;
+use App\Models\FoodsIncome;
 use App\Models\MenuItem;
 use App\Models\Stand;
 use App\Models\StandExpense;
@@ -31,7 +34,6 @@ class StandController extends Controller
         $stand = Stand::orderBy($category, $order)->get();
         if (count($stand) > 0) {
             $active_stand = $stand[$array_id];
-            $this->refreshStandCashFlow($active_stand->id);
             $stand_expenses = StandExpense::where('stand_id', '=', $active_stand->id);
             $stand_control = [
                 'prev_url' => route('food.stand', ['array_id' => $array_id - 1]),
@@ -42,6 +44,7 @@ class StandController extends Controller
             $menu_items = MenuItem::where('stand_id', $active_stand->id)->paginate(10, '*', 'menu_page');
             $sales = StandSales::where('stand_id', $active_stand->id)->orderBy('id', 'desc')->paginate(10, '*', 'sale_page');
             $data = [
+                'balance' => BlaterianBalance::orderBy('updated_at', 'desc')->first(),
                 'menu_items' => $menu_items,
                 'sales' => $sales,
                 'stand_control' => $stand_control,
@@ -49,13 +52,14 @@ class StandController extends Controller
                 'expense_items' => $stand_expenses->paginate(10, '*', 'stand_expense_page'),
                 'inverted_expense_items' => $stand_expenses->orderBy('id', 'desc')->get(),
             ];
+            // $this->refreshProfit($active_stand->id);
         } else {
             $data = [
                 'stand' => '',
             ];
         }
         $data += [
-            'users' => User::all(),
+            'users' => User::where('roles_id', '!=', null)->get(),
         ];
         return view('pages.food.stand', $data);
     }
@@ -76,25 +80,35 @@ class StandController extends Controller
     {
         // Validating data
         $request->validate([
-            'name' => ['required', 'unique:' . Stand::class],
+            'name' => ['required'],
             'pic_id' => ['required', 'numeric'],
         ]);
 
-        $data = [
+        // Insert new stand
+        Stand::create([
             'name' => $request->input('name'),
             'pic_id' => $request->input('pic_id'),
             'date' => $request->input('date'),
             'time' => $request->input('time'),
             'place' => $request->input('place'),
-        ];
+        ]);
 
-        // dd($data);
-        $stand = new Stand();
+        // Insert new foods expense
+        FoodsExpense::create([
+            'category' => 'stand expense',
+            'category_id' => Stand::where('name', '=', $request->input('name'))->first()->id,
+            'price' => 0,
+        ]);
+
+        // Insert new foods income
+        FoodsIncome::create([
+            'category' => 'stand income',
+            'category_id' => Stand::where('name', '=', $request->input('name'))->first()->id,
+            'price' => 0,
+        ]);
+
         // sucees insert
-        if ($stand->insert($data) > 0) {
-            return redirect()->back()->with('notif', ['type' => 'info', 'message' => $request->input('name') . ' has been added.']);
-        };
-        return redirect()->back()->with('notif', ['type' => 'warning', 'message' => 'Can not add ' . $request->input('name') . '. Please try again later, or contact admin.']);
+        return redirect()->back()->with('notif', ['type' => 'info', 'message' => $request->input('name') . ' has been added.']);
     }
 
     /**
@@ -126,23 +140,6 @@ class StandController extends Controller
             return back()->with('notif', ['type' => 'warning', 'message' => 'Give some inputs to update.']);
         };
         return redirect()->back()->with('notif', ['type' => 'warning', 'message' => 'Can not update menu item at the moment. Please try again later, or contact admin.']);
-    }
-
-    /**
-     * refresh Balance.
-     */
-    public function refreshBalance($stand_id)
-    {
-        $stand = Stand::find($stand_id);
-        if ($stand->sale_validation == 0) {
-            return back()->with('notif', ['type' => 'warning', 'message' => 'Sales items must be validated!']);
-        }
-        $expense = $stand->expense()->where('operational_id', '!=', null)->sum('total_price');
-        $income = $stand->sale()->sum('transaction');
-        $stand->balance = $income - $expense;
-        // dd($stand->balance);
-        $stand->save();
-        return back()->with('notif', ['type' => 'info', 'message' => $stand->name . ' Balance is updated.']);
     }
 
     /**
@@ -312,15 +309,19 @@ class StandController extends Controller
     {
         $id = $request->input('id');
         $standExpense = StandExpense::find($id);
+        $stand = $standExpense->stand;
+        if ($stand->sale_validation !== 0) {
+            return back()->with('notif', ['type' => 'warning', 'message' => 'Stand ' . $stand->name . ' sale has been validated. You can not change any data, it may cause incorect report.']);
+        }
         $standExpense->operational_id = $request->input('operational_id');
         $standExpense->save();
         if ($request->input('operational_id') != '') {
             // update necessary data
-            $this->updateStandExpense($standExpense->stand_id, true, $standExpense->total_price);
+            $this->updateStandExpense($stand->id, true, $standExpense->total_price);
             return back()->with('notif', ['type' => 'success', 'message' => 'Success VALIDATE ' . StandExpense::find($id)->name . ' Stand Expense receipt by ' . Auth::user()->name . '.']);
         } else {
             // update necessary data
-            $this->updateStandExpense($standExpense->stand_id, false, $standExpense->total_price);
+            $this->updateStandExpense($stand->id, false, $standExpense->total_price);
             return back()->with('notif', ['type' => 'warning', 'message' => 'Succes UNVALIDATE ' . StandExpense::find($id)->name . ' Stand Expense receipt by ' . Auth::user()->name . '.']);
         }
     }
@@ -333,45 +334,29 @@ class StandController extends Controller
      */
     public function updateStandExpense(int $id, bool $add, int $new_expense)
     {
+        // retrieve stand and foods expense model
         $stand = Stand::find($id);
-        $current_expense = $stand->expense;
-        if ($add) {
-            $data = ['expense' => $current_expense + $new_expense, 'updated_at' => now()];
-        } else {
-            $data = ['expense' => $current_expense - $new_expense, 'updated_at' => now()];
-        }
-        $stand = new Stand();
-        $stand->change($id, $data);
-        return $this->refreshStandCashFlow($id);
+        $foodsExpense = FoodsExpense::where('category_id', '=', $id)->first();
+
+        // determine add/minus expense
+        $new_expense = $add ? $new_expense : $new_expense * (-1);
+
+        // update current expense with new expense
+        $updated_expense = $stand->expense + $new_expense;
+
+        // set new expense value to model
+        $foodsExpense->price = $updated_expense;
+        $stand->expense = $updated_expense;
+        $stand->profit -= $new_expense;
+
+        // save model
+        $stand->updated_at = now();
+        $stand->save();
+        $foodsExpense->updated_at = now();
+        $foodsExpense->save();
+        return BlaterianBalanceController::refreshBalance();
     }
 
-    /**
-     * refresh stand cash flow to makesure it is accurate.
-     * 
-     * 
-     *  @var $id is program id, @var $add to determine add or minus 
-     */
-    public function refreshStandCashFlow(int $id)
-    {
-        $stand = Stand::find($id);
-        $expense_price = 0;
-        $income_price = 0;
-        $expenses = StandExpense::where('stand_id', $id)->where('operational_id', '!=', null)->get();
-        $incomes = StandSales::where('stand_id', $id)->get();
-        foreach ($expenses as $expense) {
-            $expense_price += $expense->total_price;
-        }
-        if ($stand->sale_validation == 0) {
-            $income_price = $stand->income;
-        } else {
-            foreach ($incomes as $income) {
-                $income_price += $income->transaction;
-            }
-        }
-        $data = ['expense' => $expense_price, 'income' => $income_price, 'profit' => $income_price - $expense_price];
-        $stand = new Stand();
-        return $stand->change($id, $data);
-    }
 
     // SALES
 
@@ -494,7 +479,7 @@ class StandController extends Controller
         $data = ['menu_lock' => $menu_lock, 'updated_at' => now()];
         $stand = new Stand();
         $stand->change($id, $data);
-        if ($menu_lock != null) {
+        if ($menu_lock != 0) {
             return back()->with('notif', ['type' => 'warning', 'message' => 'Succes LOCK menu ' . Stand::find($id)->name . ' by ' . Auth::user()->name . '.']);
         } else {
             return back()->with('notif', ['type' => 'success', 'message' => 'Succes UNLOCK menu ' . Stand::find($id)->name . ' by ' . Auth::user()->name . '.']);
@@ -511,5 +496,18 @@ class StandController extends Controller
         $menu_item->delete();
 
         return redirect()->back()->with('notif', ['type' => 'warning', 'message' => 'Menu ' . $name . ' has been deleted.']);
+    }
+
+    /**
+     * refresh Profit.
+     */
+    public function refreshProfit($stand_id)
+    {
+        $stand = Stand::find($stand_id);
+        $expense = $stand->expense()->where('operational_id', '!=', 0)->sum('total_price');
+        $income = $stand->sale()->sum('transaction');
+        $stand->profit = $income - $expense;
+        $stand->save();
+        return back()->with('notif', ['type' => 'info', 'message' => $stand->name . ' Balance is updated.']);
     }
 }

@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('profit')->nullable();
             $table->integer('balance')->nullable();
             $table->tinyInteger('menu_lock')->default(0);
-            $table->tinyInteger('sale_valdiation')->default(0);
+            $table->tinyInteger('sale_validation')->default(0);
             $table->integer('cashier_token')->nullable();
             $table->softDeletes();
             $table->timestamps();

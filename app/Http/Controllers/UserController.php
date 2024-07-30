@@ -15,7 +15,7 @@ class UserController extends Controller
      */
     public function index(): View
     {
-        $users = User::all();
+        $users = User::where('roles_id', '!=', null)->all();
         $data = [
             'sidebar' => 'seeo',
             'total' => count($users),
@@ -62,8 +62,6 @@ class UserController extends Controller
                 $role_key = Str::of(array_keys($input)[$i + 1])->startsWith('role') ? array_keys($input)[$i + 1] : 4;
                 $id = $request->input($id_key);
                 $role = $role_key == 4 ? 4 : $request->input($role_key);
-
-                // dd($id_key, $role_key, $id, $role);
 
                 // Check if user role not staff, then update
                 if ($role != 4) {

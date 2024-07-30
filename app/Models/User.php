@@ -28,6 +28,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'phone',
         'roles_id',
         'proker_id',
+        'email_verified_at',
     ];
 
     /**
@@ -58,7 +59,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * 
      * @return number of affected rows
      */
-    function change(int $id, $data): int
+    static function change(int $id, $data): int
     {
         $affected = DB::table('users')
             ->where('id', $id)

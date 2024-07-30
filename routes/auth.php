@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Auth\RegisteredGoogleUserController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,11 @@ Route::middleware('guest')->group(function () {
         ->name('register');
 
     Route::post('register', [RegisteredUserController::class, 'store']);
+
+    Route::get('register/google/{id}', [RegisteredGoogleUserController::class, 'create'])
+        ->name('register.google');
+
+    Route::post('register/google', [RegisteredGoogleUserController::class, 'store'])->name('complete.register.google');
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');

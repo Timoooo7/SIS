@@ -10,9 +10,25 @@ use Illuminate\Http\Request;
 class BlaterianBalanceController extends Controller
 {
     //Food Balance
+
     /**
-     * refresh stand cash flow to makesure it is accurate.
      * 
+     * display foods balance.
+     * 
+     */
+    function balance()
+    {
+        $data = [
+            'title' => 'Blaterian Foods Balance',
+        ];
+        return view('pages.food.balance', $data);
+    }
+
+
+
+    /**
+     * 
+     * refresh stand cash flow to makesure it is accurate.
      * 
      *  @var $id is program id, @var $add to determine add or minus 
      */

@@ -12,11 +12,38 @@
         $navs = [
             [
                 'group' => 'Foods',
-                'list' => [['route' => route('food.stand', ['array_id' => 0]), 'active' => request()->routeIs('food.stand', ['array_id' => 0]), 'title' => 'Stand'], ['route' => route('food.sales'), 'active' => request()->routeIs('food.sales'), 'title' => 'Point of Sales']],
+                'list' => [
+                    [
+                        'route' => route('food.balance'),
+                        'active' => request()->routeIs('food.balance'),
+                        'title' => 'Balance',
+                    ],
+                    [
+                        'route' => route('food.stand', ['array_id' => 0]),
+                        'active' => request()->routeIs('food.stand', ['array_id' => 0]),
+                        'title' => 'Stand',
+                    ],
+                    [
+                        'route' => route('food.sales'),
+                        'active' => request()->routeIs('food.sales'),
+                        'title' => 'Point of Sales',
+                    ],
+                ],
             ],
             [
                 'group' => 'Goods',
-                'list' => [['route' => route('food.sales'), 'active' => request()->routeIs('good'), 'title' => 'Goods'], ['route' => route('food.sales'), 'active' => request()->routeIs('good'), 'title' => 'Goods']],
+                'list' => [
+                    [
+                        'route' => route('food.sales'),
+                        'active' => request()->routeIs('good'),
+                        'title' => 'Goods',
+                    ],
+                    [
+                        'route' => route('food.sales'),
+                        'active' => request()->routeIs('good'),
+                        'title' => 'Goods',
+                    ],
+                ],
             ],
         ];
     }
@@ -83,7 +110,9 @@
                                 @endforeach
                             @elseif ($sidebar == 'blaterian')
                                 @foreach ($navs as $group)
-                                    <p class="fs-5 mb-2 mt-4 border-top border-info">{{ $group['group'] }}</p>
+                                    @if ($group['group'])
+                                        <p class="fs-5 mb-2 mt-4 border-top border-info">{{ $group['group'] }}</p>
+                                    @endif
                                     @foreach ($group['list'] as $nav)
                                         <a href="{{ $nav['route'] }}"
                                             class="d-inline my-2 border-0 rounded list-group-item list-group-item-action list-group-item-info shadow {{ $nav['active'] ? 'active ' : '' }}">

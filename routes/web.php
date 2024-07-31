@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\BlaterianBalanceController;
 use App\Http\Controllers\BudgetItemController;
 use App\Http\Controllers\CashFlowController;
 use App\Http\Controllers\DashboardController;
@@ -13,9 +14,6 @@ use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\StandController;
 use App\Http\Controllers\UserController;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -43,6 +41,7 @@ Route::middleware(['auth', 'verified', 'staff'])->group(function () {
     Route::get('/seeo/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/seeo/cashflow', [CashFlowController::class, 'index'])->name('cashflow');
     Route::get('/blaterian/foods/sales', [SalesController::class, 'sales'])->name('food.sales');
+    Route::get('/blaterian/foods/balance', [BlaterianBalanceController::class, 'balance'])->name('food.balance');
     Route::get('/blaterian/foods/stand/{array_id}', [StandController::class, 'stand'])->name('food.stand');
     Route::get('/blaterian/good', [GoodController::class, 'sales'])->name('good');
     Route::put('/food/stand', [StandController::class, 'findStand'])->name('food.stand.find');

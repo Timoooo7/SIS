@@ -44,7 +44,6 @@ class StandController extends Controller
             $menu_items = MenuItem::where('stand_id', $active_stand->id)->paginate(10, '*', 'menu_page');
             $sales = StandSales::where('stand_id', $active_stand->id)->orderBy('id', 'desc')->paginate(10, '*', 'sale_page');
             $data = [
-                'balance' => BlaterianBalance::orderBy('updated_at', 'desc')->first(),
                 'menu_items' => $menu_items,
                 'sales' => $sales,
                 'stand_control' => $stand_control,
@@ -59,8 +58,10 @@ class StandController extends Controller
             ];
         }
         $data += [
+            'balance' => BlaterianBalance::orderBy('updated_at', 'desc')->first(),
             'users' => User::where('roles_id', '!=', null)->get(),
         ];
+        BlaterianBalanceController::refreshBalance();
         return view('pages.food.stand', $data);
     }
 

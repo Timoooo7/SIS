@@ -883,27 +883,32 @@ use Illuminate\Support\Carbon;
                             @if ($stand->menu_lock != null)
                                 @if (count($sales) > 0)
                                     {{-- Operational Feature --}}
+                                    <?php $route_sales_validation = $stand->expense == 0 ? '' : route('stand.sales.validate', ['stand_id' => $stand->id]); ?>
                                     <form method="post" class="d-inline ms-0"
-                                        action="{{ route('stand.sales.validate', ['stand_id' => $stand->id]) }}">
+                                        action="{{ $route_sales_validation }}">
                                         @csrf
                                         @method('put')
                                         <input type="hidden" name="stand_id" value="{{ $stand->id }}">
-                                        @if ($stand->sale_validation !== 0)
+                                        @if ($stand->sale_validation !== 0 && Auth::user()->roles_id == 3)
                                             <span
                                                 class="text-secondary fst-italic">{{ 'Sale is validated, no changes permitted.' }}</span>
-                                            @if (Auth::user()->roles_id == 3)
-                                                <button type="submit"
-                                                    class="border-start border-danger bg-danger-subtle text-danger ps-2 pe-2 "
-                                                    value="{{ 0 }}" name="operational_id"
-                                                    data-bs-dismiss="modal">
-                                                    UNVALIDATE
-                                                </button>
-                                            @endif
-                                        @else
-                                            @if (Auth::user()->roles_id == 3)
+                                            <button type="submit"
+                                                class="border-start border-danger bg-danger-subtle text-danger ps-2 pe-2 "
+                                                value="{{ 0 }}" name="operational_id"
+                                                data-bs-dismiss="modal">
+                                                UNVALIDATE
+                                            </button>
+                                        @elseif(Auth::user()->roles_id == 3)
+                                            @if ($stand->expense == 0)
                                                 <button type="submit"
                                                     class="border-start border-success bg-success-subtle text-success ps-2 pe-2 "
                                                     value="{{ Auth::user()->id }}" name="operational_id"
+                                                    data-bs-dismiss="modal">
+                                                    VALIDATE
+                                                </button>
+                                            @else
+                                                <button type="submit"
+                                                    class="border-start border-secondary bg-secondary-subtle text-secondary ps-2 pe-2 "
                                                     data-bs-dismiss="modal">
                                                     VALIDATE
                                                 </button>

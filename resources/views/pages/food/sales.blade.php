@@ -188,7 +188,7 @@
                                         @endif
 
                                         <span class="float-end text-primary-enhanced">
-                                            {{ Number::currency($item->price, 'IDR') }}
+                                            {{ format_currency($item->price, 'IDR') }}
                                             <span
                                                 class="border border-primary bg-white rounded-lg px-1 pt-1 pb-0 ms-2 shadow mt-0">
                                                 {{ $item->sale . ' pcs' }}</span>
@@ -207,7 +207,7 @@
                                     {{ 'menu' }}
                                     <span class="fw-light">({{ 'details' }})</span>
                                     <span
-                                        class="float-end text-primary-enhanced">{{ Number::currency(0, 'IDR') }}</span>
+                                        class="float-end text-primary-enhanced">{{ format_currency(0, 'IDR') }}</span>
                                 </p>
                             @endif
                         </div>

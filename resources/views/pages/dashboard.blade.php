@@ -39,11 +39,11 @@
                             <div class="row m-2">
                                 <span class="text-white text-sm"><span class="text-light fw-lighter fst-italic">in
                                     </span> :
-                                    {{ Number::currency($cash_in, in: 'IDR') }}</span>
+                                    {{ format_currency($cash_in, 'IDR') }}</span>
                                 <span class="text-white text-sm"><span class="text-light fw-lighter fst-italic">out
                                     </span>
                                     :
-                                    {{ Number::currency($cash_out, in: 'IDR') }}</span>
+                                    {{ format_currency($cash_out, 'IDR') }}</span>
                             </div>
                         </div>
                     </div>

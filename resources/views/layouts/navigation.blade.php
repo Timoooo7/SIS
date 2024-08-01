@@ -4,7 +4,7 @@
     <?php
     // Sidebar Identification
     $sidebar = Str::of(Route::current()->uri())->split('[/]')->first();
-    $sections = [['route' => route('dashboard'), 'active' => $sidebar == 'seeo', 'title' => 'SEEO'], ['route' => route('food.stand', ['array_id' => 0]), 'active' => $sidebar == 'blaterian', 'title' => 'Blaterian']];
+    $sections = [['route' => route('dashboard'), 'active' => $sidebar == 'seeo', 'title' => 'SEEO'], ['route' => route('food.balance'), 'active' => $sidebar == 'blaterian', 'title' => 'Blaterian']];
     // Side Nav list
     if ($sidebar == 'seeo') {
         $navs = [['route' => route('dashboard'), 'active' => request()->routeIs('dashboard'), 'title' => 'Dashboard'], ['route' => route('department'), 'active' => request()->routeIs('department'), 'title' => 'Department'], ['route' => route('cashflow'), 'active' => request()->routeIs('cashflow'), 'title' => 'Cash Flow'], ['route' => route('role'), 'active' => request()->routeIs('role'), 'title' => 'Roles']];

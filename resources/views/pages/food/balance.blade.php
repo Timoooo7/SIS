@@ -12,60 +12,130 @@ use Illuminate\Support\Carbon;
     </x-slot>
 
     <div class="container py-3 px-10">
-        {{-- Tab --}}
-        <ul class="nav nav-tabs">
-            <li class="nav-item"><a id="tab_1" onclick="show_tab(1)" class="nav-link">Dashboard</a></li>
-            <li class="nav-item"><a id="tab_2" onclick="show_tab(2)" class="nav-link me-2">Income</a></li>
-            <li class="nav-item"><a id="tab_3" onclick="show_tab(3)" class="nav-link">Expense</a></li>
-        </ul>
+        <div class="row">
+            {{-- Dashboard for medium and smaller screen  --}}
+            <div id="carouselDashboard" class="carousel slide d-lg-none" data-bs-ride="carousel">
+                <div class="carousel-inner p-3">
+                    {{-- Balance carousel --}}
+                    <div class="carousel-item active shadow-md">
+                        <div class="card text-bg-primary">
+                            <div class="card-body">
+                                <div class="row m-0 p-0">
+                                    <div class="col-auto">
+                                        <div class="bi bi-wallet2 my-auto" style="font-size:300%"> </div>
+                                    </div>
+                                    <div class="col-1 d-flex">
+                                        <div class="border-start border-secondary-emphasis h-100"></div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <p class="text-white mb-1 text-opacity-75 fs-6 fw-light ">Balance</p>
+                                        <span class="fs-2">{{ format_currency($balance->balance, 'IDR') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- Income carousel --}}
+                    <div class="carousel-item shadow-md">
+                        <div class="card text-bg-secondary">
+                            <div class="card-body">
+                                <div class="row m-0 p-0">
+                                    <div class="col-auto">
+                                        <div class="bi bi-box-arrow-in-down my-auto" style="font-size:300%"> </div>
+                                    </div>
+                                    <div class="col-1 d-flex">
+                                        <div class="border-start border-secondary-emphasis h-100"></div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <p class="text-white mb-1 text-opacity-75 fs-6 fw-light ">Income</p>
+                                        <span class="fs-2">{{ format_currency($balance->income, 'IDR') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- Expense carousel --}}
+                    <div class="carousel-item shadow-md">
+                        <div class="card text-bg-secondary">
+                            <div class="card-body">
+                                <div class="row m-0 p-0">
+                                    <div class="col-auto">
+                                        <div class="bi bi-box-arrow-in-up my-auto" style="font-size:300%"> </div>
+                                    </div>
+                                    <div class="col-1 d-flex">
+                                        <div class="border-start border-secondary-emphasis h-100"></div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <p class="text-white mb-1 text-opacity-75 fs-6 fw-light ">Expense</p>
+                                        <span class="fs-2">{{ format_currency($balance->expense, 'IDR') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-        {{-- Dashboard Tab --}}
-        <div id="content_1" class="row pt-0">
+                </div>
+            </div>
 
-
-        </div>
-
-        {{-- Income Tab --}}
-        <div id="content_2" class="row pt-0">
-
-
-        </div>
-
-        {{-- Expense Tab --}}
-        <div id="content_3" class="row pt-0 ">
-
+            {{-- Dashboard for large and bigger screen  --}}
+            {{-- Balance --}}
+            <div class="col-6 col-xl-4 mt-3 d-none d-lg-block">
+                <div class="card text-bg-primary">
+                    <div class="card-body">
+                        <div class="row m-0 p-0">
+                            <div class="col-auto">
+                                <div class="bi bi-wallet2 my-auto" style="font-size:300%"> </div>
+                            </div>
+                            <div class="col-1 d-flex">
+                                <div class="border-start border-secondary-emphasis h-100"></div>
+                            </div>
+                            <div class="col-auto">
+                                <p class="text-white mb-1 text-opacity-75 fs-6 fw-light ">Balance</p>
+                                <span class="fs-3">{{ $balance_formated }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{-- Income --}}
+            <div class="col-6 col-xl-4 mt-3 d-none d-lg-block">
+                <div class="card text-bg-secondary">
+                    <div class="card-body">
+                        <div class="row m-0 p-0">
+                            <div class="col-auto">
+                                <div class="bi bi-box-arrow-in-down my-auto" style="font-size:300%"> </div>
+                            </div>
+                            <div class="col-1 d-flex">
+                                <div class="border-start border-secondary-emphasis h-100"></div>
+                            </div>
+                            <div class="col-auto">
+                                <p class="text-white mb-1 text-opacity-75 fs-6 fw-light ">Income</p>
+                                <span class="fs-3">{{ format_currency($balance->income, 'IDR') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-xl-4 mt-3 d-none d-lg-block">
+                <div class="card text-bg-secondary">
+                    <div class="card-body">
+                        <div class="row m-0 p-0">
+                            <div class="col-auto">
+                                <div class="bi bi-box-arrow-in-up my-auto" style="font-size:300%"> </div>
+                            </div>
+                            <div class="col-1 d-flex">
+                                <div class="border-start border-secondary-emphasis h-100"></div>
+                            </div>
+                            <div class="col-auto">
+                                <p class="text-white mb-1 text-opacity-75 fs-6 fw-light ">Expense</p>
+                                <span class="fs-3">{{ format_currency($balance->expense, 'IDR') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <script>
-        var default_tab = sessionStorage.getItem('default_tab');
-        window.onload = function() {
-            if (default_tab !== null) {
-                show_tab(default_tab);
-            } else {
-                show_tab(1);
-            }
-        };
-
-        function show_tab(target) {
-            const tabs = 3;
-            for (let number = 1; number <= tabs; number++) {
-                let tab = document.getElementById('tab_' + number);
-                let content = document.getElementById('content_' + number);
-                if (target != number) {
-                    // set tab to deactive
-                    tab.setAttribute('class', 'nav-link');
-                    // set content to hide
-                    content.setAttribute('hidden', '');
-                } else {
-                    // set tab to active
-                    tab.setAttribute('class', 'nav-link active');
-                    // set content to show
-                    content.removeAttribute('hidden');
-                }
-            }
-
-            sessionStorage.setItem('default_tab', target);
-        }
-    </script>
+    <script></script>
 </x-app-layout>

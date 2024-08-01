@@ -301,7 +301,7 @@ use Illuminate\Support\Carbon;
                                         <path
                                             d="M12.136.326A1.5 1.5 0 0 1 14 1.78V3h.5A1.5 1.5 0 0 1 16 4.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 13.5v-9a1.5 1.5 0 0 1 1.432-1.499zM5.562 3H13V1.78a.5.5 0 0 0-.621-.484zM1.5 4a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5z" />
                                     </svg>
-                                    {{ __('Blaterian Foods Balance : ' . Number::currency($balance->balance, in: 'IDR')) }}
+                                    {{ __('Blaterian Foods Balance : ' . format_currency($balance->balance, 'IDR')) }}
                                 </p>
                             </div>
                         </div>
@@ -333,14 +333,14 @@ use Illuminate\Support\Carbon;
                                 <p class="my-2">{{ __('Expense :') }}
                                     <span class="float-end">
                                         @if ($stand_exist)
-                                            {{ Number::currency($stand->expense !== null ? $stand->expense : 0, in: 'IDR') }}
+                                            {{ format_currency($stand->expense !== null ? $stand->expense : 0, 'IDR') }}
                                         @endif
                                     </span>
                                 </p>
                                 <p class="my-2">{{ __('Income :') }}
                                     <span class="float-end">
                                         @if ($stand_exist)
-                                            {{ Number::currency($stand->income !== null ? $stand->income : 0, in: 'IDR') }}
+                                            {{ format_currency($stand->income !== null ? $stand->income : 0, 'IDR') }}
                                         @endif
                                     </span>
                                 </p>
@@ -355,7 +355,7 @@ use Illuminate\Support\Carbon;
                                 <p class="my-2">{{ __('Profit (' . $percent . '%) :') }}
                                     <span class="float-end">
                                         @if ($stand_exist)
-                                            {{ Number::currency($stand->profit !== null ? $stand->profit : 0, in: 'IDR') }}
+                                            {{ format_currency($stand->profit !== null ? $stand->profit : 0, 'IDR') }}
                                         @endif
                                     </span>
                                 </p>
@@ -490,7 +490,7 @@ use Illuminate\Support\Carbon;
                         <span class="fs-6">Total Expense :
                             <span class="fw-light">
                                 @if ($stand_exist)
-                                    {{ Number::currency($stand->expense()->sum('total_price'), 'IDR') }}
+                                    {{ format_currency($stand->expense()->sum('total_price'), 'IDR') }}
                                 @else
                                     {{ ' - ' }}
                                 @endif
@@ -756,10 +756,10 @@ use Illuminate\Support\Carbon;
                                     <tr>
                                         <th scope="row">{{ $i }}</th>
                                         <td>{{ $expense_item->name }}</td>
-                                        <td>{{ Number::currency($expense_item->price, 'IDR') }}</td>
+                                        <td>{{ format_currency($expense_item->price, 'IDR') }}</td>
                                         <td>{{ $expense_item->unit }}</td>
                                         <td class="ps-4">{{ $expense_item->qty }}</td>
-                                        <td>{{ Number::currency($expense_item->total_price, in: 'IDR') }}</td>
+                                        <td>{{ format_currency($expense_item->total_price, 'IDR') }}</td>
                                         <td>
                                             <?php
                                             $operational_name = $expense_item->operational_id != null ? $expense_item->operational->name : 'none';
@@ -871,7 +871,7 @@ use Illuminate\Support\Carbon;
                         <span class="fs-6 ">{{ 'Total Transaction : ' }}
                             <span class="fw-light">
                                 @if ($stand_exist)
-                                    {{ Number::currency($sales->sum('transaction'), 'IDR') }}
+                                    {{ format_currency($sales->sum('transaction'), 'IDR') }}
                                 @else
                                     {{ ' - ' }}
                                 @endif
@@ -1021,10 +1021,10 @@ use Illuminate\Support\Carbon;
                                         <td>{{ $sale->created_at->format('H:i:s') }}</td>
                                         <td>{{ $sale->cashier->name }}</td>
                                         <td>{{ $sale->menu->name }}</td>
-                                        <td>{{ Number::currency($sale->menu->price, in: 'IDR') }}</td>
+                                        <td>{{ format_currency($sale->menu->price, 'IDR') }}</td>
                                         <td class="text-center">{{ $sale->amount . ' pcs' }}</td>
-                                        <td>{{ Number::currency($sale->discount, in: 'IDR') }}</td>
-                                        <td>{{ Number::currency($sale->transaction, in: 'IDR') }}</td>
+                                        <td>{{ format_currency($sale->discount, 'IDR') }}</td>
+                                        <td>{{ format_currency($sale->transaction, 'IDR') }}</td>
                                         <td>{{ $sale->customer }}</td>
                                     </tr>
                                     <?php $i++; ?>
@@ -1349,7 +1349,7 @@ use Illuminate\Support\Carbon;
                                     <tr>
                                         <th scope="row">{{ $i }}</th>
                                         <td>{{ $menu_item->name }}</td>
-                                        <td>{{ Number::currency($menu_item->price, in: 'IDR') }}</td>
+                                        <td>{{ format_currency($menu_item->price, 'IDR') }}</td>
                                         <?php $volume = $menu_item->volume !== null ? $menu_item->volume . ' (' . $menu_item->volume_unit . ')' : '-'; ?>
                                         <td colspan="2" class="text-center">{{ $volume }}</td>
                                         <?php $mass = $menu_item->mass !== null ? $menu_item->mass . ' (' . $menu_item->mass_unit . ')' : '-'; ?>

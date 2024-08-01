@@ -199,13 +199,13 @@
                                     @endif
                                     )
                                 </span>:
-                                <span class=" float-end">{{ Number::currency($program->budget, in: 'IDR') }}</span>
+                                <span class=" float-end">{{ format_currency($program->budget, 'IDR') }}</span>
                             </div>
                             <div class="fs-6 my-1">Total Disbursement: <span class="float-end">
-                                    {{ Number::currency($program->disbursement, in: 'IDR') }}</span>
+                                    {{ format_currency($program->disbursement, 'IDR') }}</span>
                             </div>
                             <div class="fs-6 my-1">Total Expense: <span
-                                    class="float-end">{{ Number::currency($program->expense, in: 'IDR') }}</span>
+                                    class="float-end">{{ format_currency($program->expense, 'IDR') }}</span>
                             </div>
                         </div>
                         <div class="col-lg-4">
@@ -489,10 +489,10 @@
                                 <tr>
                                     <th scope="row">{{ $i }}</th>
                                     <td>{{ $budget_item->name }}</td>
-                                    <td>{{ $budget_item->price }}</td>
+                                    <td>{{ format_currency($budget_item->price) }}</td>
                                     <td>{{ $budget_item->unit }}</td>
                                     <td class="text-center">{{ $budget_item->qty }}</td>
-                                    <td>{{ Number::currency($budget_item->total_price, in: 'IDR') }}</td>
+                                    <td>{{ format_currency($budget_item->total_price, 'IDR') }}</td>
                                 </tr>
                                 <?php $i++; ?>
                             @endforeach
@@ -688,7 +688,7 @@
                                 <tr>
                                     <th scope="row">{{ $i }}</th>
                                     <td>{{ $disbursement_item->name }}</td>
-                                    <td>{{ Number::currency($disbursement_item->price, in: 'IDR') }}</td>
+                                    <td>{{ format_currency($disbursement_item->price, 'IDR') }}</td>
                                     <td>{{ $disbursement_item->financial->name }}</td>
                                     <td class="text-center">
                                         <button data-bs-toggle="modal" data-bs-target="#recieptModal"
@@ -968,10 +968,10 @@
                                 <tr>
                                     <th scope="row">{{ $i }}</th>
                                     <td>{{ $expense_item->name }}</td>
-                                    <td>{{ $expense_item->price }}</td>
+                                    <td>{{ format_currency($expense_item->price) }}</td>
                                     <td>{{ $expense_item->unit }}</td>
                                     <td class="ps-4">{{ $expense_item->qty }}</td>
-                                    <td>{{ Number::currency($expense_item->total_price, in: 'IDR') }}</td>
+                                    <td>{{ format_currency($expense_item->total_price, 'IDR') }}</td>
                                     <td>
                                         <?php
                                         $financial_name = $expense_item->financial_id != null ? $expense_item->financial->name : 'none';

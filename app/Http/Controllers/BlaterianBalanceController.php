@@ -6,6 +6,7 @@ use App\Models\BlaterianBalance;
 use App\Models\FoodsExpense;
 use App\Models\FoodsIncome;
 use Illuminate\Http\Request;
+use NumberFormatter;
 
 class BlaterianBalanceController extends Controller
 {
@@ -19,7 +20,11 @@ class BlaterianBalanceController extends Controller
     function balance()
     {
         $data = [
+            'balance_formated' => format_currency(500, 'IDR'),
             'title' => 'Blaterian Foods Balance',
+            'balance' => BlaterianBalance::find(1),
+            'income' => FoodsIncome::all(),
+            'expense' => FoodsExpense::all(),
         ];
         return view('pages.food.balance', $data);
     }

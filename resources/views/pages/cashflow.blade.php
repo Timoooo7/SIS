@@ -34,11 +34,11 @@
                                     @endforeach
                                 </ul>
                             </div>
-                            <div class="fs-6 my-1">Total Cash In: <span class="float-end">
-                                    {{ Number::currency($totalCashIn, in: 'IDR') }}</span>
+                            <div class="fs-6 my-1">Total Cash <span class="float-end">
+                                    {{ format_currency($totalCashIn, 'IDR') }}</span>
                             </div>
                             <div class="fs-6 my-1">Total Cash Out: <span
-                                    class="float-end">{{ Number::currency($totalCashOut, in: 'IDR') }}</span>
+                                    class="float-end">{{ format_currency($totalCashOut, 'IDR') }}</span>
                             </div>
                         </div>
                     </div>
@@ -218,7 +218,7 @@
                                 <tr>
                                     <th scope="row">{{ $i }}</th>
                                     <td>{{ $cash_in_item->name }}</td>
-                                    <td>{{ Number::currency($cash_in_item->price, in: 'IDR') }}</td>
+                                    <td>{{ format_currency($cash_in_item->price, 'IDR') }}</td>
                                     <td>{{ $cash_in_item->financial->name }}</td>
                                     <td class="text-center">
                                         <button data-bs-toggle="modal" data-bs-target="#recieptModal"
@@ -284,7 +284,7 @@
                                 <?php $percent = $totalCashOut != 0 ? round(($item->disbursement * 100) / $totalCashOut) : 0; ?>
                                 <p class="my-0 ">
                                     {{ $item->name . ' : ' }} <span
-                                        class="text-secondary">{{ Number::currency($item->disbursement, in: 'IDR') }}</span>
+                                        class="text-secondary">{{ format_currency($item->disbursement, 'IDR') }}</span>
                                 </p>
                                 <p class="my-0 text-secondary float-start me-2">
                                     <span class="text-danger">{{ $percent }}</span>%
@@ -321,7 +321,7 @@
                                             <th scope="row">{{ $i }}</th>
                                             <td>{{ $cash_out_item->department->name }}</td>
                                             <td>{{ $cash_out_item->name }}</td>
-                                            <td>{{ Number::currency($cash_out_item->disbursement, in: 'IDR') }}</td>
+                                            <td>{{ format_currency($cash_out_item->disbursement, 'IDR') }}</td>
                                             <td>{{ $cash_out_item->updated_at->format('d M y - H:i') }}</td>
                                             <td>
                                                 <a href="{{ route('program', ['id' => $cash_out_item->id]) }}">

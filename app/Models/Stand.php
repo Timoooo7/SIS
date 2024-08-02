@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
@@ -34,6 +35,7 @@ class Stand extends Model
         'income',
         'profit',
     ];
+
 
     /**
      * Update department data.
@@ -90,5 +92,21 @@ class Stand extends Model
     public function sale(): HasMany
     {
         return $this->hasMany(StandSales::class, 'stand_id');
+    }
+
+    /**
+     * foods income of stand
+     */
+    public function foods_income(): HasOne
+    {
+        return $this->hasOne(FoodsIncome::class, 'category_id');
+    }
+
+    /**
+     * foods income of stand
+     */
+    public function foods_expense(): HasOne
+    {
+        return $this->hasOne(FoodsExpense::class, 'category_id');
     }
 }

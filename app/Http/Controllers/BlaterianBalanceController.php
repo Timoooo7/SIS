@@ -17,19 +17,39 @@ class BlaterianBalanceController extends Controller
      * display foods balance.
      * 
      */
-    function balance()
+    function balance(Request $request)
     {
+        $income = session('income', ['category' => 'updated_at', 'order' => 'desc']);
+        $expense = session('expense', ['category' => 'updated_at', 'order' => 'desc']);
+        // Save to session
+        $request->session()->put('income', $income);
+        $request->session()->put('expense', $expense);
+        // Stand filter
+        $income_list = FoodsIncome::with(['stand', 'program'])->orderBy($income['category'], $income['order'])->get();
+        $expense_list = FoodsExpense::with(['stand', 'program'])->orderBy($expense['category'], $expense['order'])->get();
+        // dd($income_list);
         $data = [
             'balance_formated' => format_currency(500, 'IDR'),
             'title' => 'Blaterian Foods Balance',
             'balance' => BlaterianBalance::find(1),
-            'income' => FoodsIncome::all(),
-            'expense' => FoodsExpense::all(),
+            'income' => $income_list,
+            'expense' => $expense_list,
+            'filter' => [
+                'income' => $income,
+                'expense' => $expense,
+            ]
         ];
         return view('pages.food.balance', $data);
     }
 
-
+    /**
+     * find blaterian balance.
+     */
+    public function findBalance($balance, $category, $order)
+    {
+        session([$balance => ['category' => $category, 'order' => $order]]);
+        return back();
+    }
 
     /**
      * 

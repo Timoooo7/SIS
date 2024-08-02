@@ -33,6 +33,7 @@ class StandExpense extends Model
         'reciept',
     ];
 
+
     /**
      * Update expense item data.
      * 

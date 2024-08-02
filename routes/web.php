@@ -44,6 +44,7 @@ Route::middleware(['auth', 'verified', 'staff'])->group(function () {
     Route::get('/blaterian/foods/balance', [BlaterianBalanceController::class, 'balance'])->name('food.balance');
     Route::get('/blaterian/foods/stand/{array_id}', [StandController::class, 'stand'])->name('food.stand');
     Route::get('/blaterian/good', [GoodController::class, 'sales'])->name('good');
+    Route::get('/food/balance/{balance}/{category}/{order}', [BlaterianBalanceController::class, 'findBalance'])->name('food.balance.find');
     Route::put('/food/stand', [StandController::class, 'findStand'])->name('food.stand.find');
     Route::put('/food/stand/expense/add/{stand_id}', [StandController::class, 'insertStandExpense'])->name('stand.expense.add');
     Route::put('/food/stand/expense/update/{pic_id}', [StandController::class, 'updateStandExpenseItem'])->name('stand.expense.update');

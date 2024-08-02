@@ -43,8 +43,24 @@ class FoodsExpense extends Model
     /**
      * The category details that has the stand income.
      */
-    public function category_detail(): BelongsTo
+    public function category_detail()
+    {
+        return $this->category == 'stand expense' ? $this->stand : $this->program;
+    }
+
+    /**
+     * The stand details that has the stand income.
+     */
+    public function stand(): BelongsTo
     {
         return $this->belongsTo(Stand::class, 'category_id');
+    }
+
+    /**
+     * The program details that has the stand income.
+     */
+    public function program(): BelongsTo
+    {
+        return $this->belongsTo(Program::class, 'category_id');
     }
 }

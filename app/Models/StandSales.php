@@ -35,6 +35,7 @@ class StandSales extends Model
         'deleted_at',
     ];
 
+
     /**
      * Update item data.
      * 

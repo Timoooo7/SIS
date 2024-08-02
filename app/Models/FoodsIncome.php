@@ -23,6 +23,7 @@ class FoodsIncome extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'price',
         'category',
         'category_id',
     ];
@@ -61,6 +62,6 @@ class FoodsIncome extends Model
      */
     public function program(): BelongsTo
     {
-        return $this->belongsTo(Program::class, 'category_id');
+        return $this->belongsTo(DisbursementItem::class, 'category_id');
     }
 }

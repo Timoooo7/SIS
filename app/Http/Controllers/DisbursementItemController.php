@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DisbursementItem;
+use App\Models\FoodsIncome;
 use App\Models\Program;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +29,8 @@ class DisbursementItemController extends Controller
         $reciept_name =  'di_' . str()->snake($program->name) . '_' . time() . '.' . $reciept->extension();
         // store reciept file
         $reciept->storePubliclyAs('images/receipt/disbursement', $reciept_name, 'public');
-        $data = [
+        // add new disbursement item
+        $disbursement = DisbursementItem::create([
             'name' => $request->input('disbursement_name'),
             'financial_id' => Auth::user()->id,
             'program_id' => $id,
@@ -36,15 +38,35 @@ class DisbursementItemController extends Controller
             'reciept' => $reciept_name,
             'updated_at' => now(),
             'created_at' => now()
-        ];
+        ]);
+        // add new Blaterian disbursement
+        $blaterian_disbursement = $request->input('blaterian_disbursement');
+        if ($blaterian_disbursement !== null) {
+            switch ($blaterian_disbursement) {
+                case 'foods':
+                    FoodsIncome::create([
+                        'name' => $request->input('disbursement_name'),
+                        'price' => $request->input('disbursement_price'),
+                        'category' => 'program disbursement',
+                        'category_id' => $disbursement->id,
+                    ]);
+                    BlaterianBalanceController::refreshBalance();
+                    break;
+
+                default:
+                    // GoodsIncome::create([
+                    //     'name' => $request->input('disbursement_name'),
+                    //     'category' => 'program disbursement',
+                    //     'category_id' => $disbursement->id,
+                    // ]);
+                    dd('goods income');
+                    break;
+            }
+        }
         // update necessary data
         $this->updateProgramDisbursement($id, true, $request->input('disbursement_price'));
-        // sucees insert
-        $disbursementItem = new DisbursementItem();
-        if ($disbursementItem->insert($data) > 0) {
-            return redirect()->back()->with('notif', ['type' => 'info', 'message' => 'New disbursement item has been added.']);
-        };
-        return redirect()->back()->with('notif', ['type' => 'warning', 'message' => 'Can not add new disbursement item. Please try again later, or contact admin.']);
+
+        return redirect()->back()->with('notif', ['type' => 'info', 'message' => 'New disbursement item has been added.']);
     }
 
     /**
@@ -59,7 +81,7 @@ class DisbursementItemController extends Controller
 
         // check delete
         if ($request->input('action') == 'delete') {
-            return $this->deleteDisbursementItem($request->input('id'));
+            return $this->deleteDisbursementItem($request->input('id_disbursement'));
         }
 
         // check if everything empty
@@ -85,19 +107,25 @@ class DisbursementItemController extends Controller
         } else {
             $reciept_name = $disbursementItem->reciept;
         }
-        $data = [
-            'price' => $price,
-            'reciept' => $reciept_name,
-            'updated_at' => now(),
-        ];
-        $expenseItem = new DisbursementItem();
+        // save new disbursement data
+        $disbursementItem->price = $price;
+        $disbursementItem->reciept = $reciept_name;
+        $disbursementItem->save();
+
+        // update blaterian disbursement
+        $foods_income = FoodsIncome::where('category', 'program disbursement')->where('category_id', $di_id)->first();
+        // $goods_income = GoodsIncome::where('category', 'program disbursement')->where('category_id', $di_id)->first();
+        $blaterian_disbursement = $foods_income ? $foods_income : $foods_income;
+        if ($blaterian_disbursement) {
+            $blaterian_disbursement->price = $price;
+            $blaterian_disbursement->save();
+            BlaterianBalanceController::refreshBalance();
+        }
+
         // update necessary data
         $this->updateProgramDisbursement($disbursementItem->program_id, true, $price - $disbursementItem->price);
         // sucees update
-        if ($expenseItem->change($di_id, $data) > 0) {
-            return redirect()->back()->with('notif', ['type' => 'info', 'message' => 'Disbursement item ' . DisbursementItem::find($di_id)->name . ' is updated.']);
-        };
-        return redirect()->back()->with('notif', ['type' => 'warning', 'message' => 'Can not update disbursement item at the moment. Please try again later, or contact admin.']);
+        return redirect()->back()->with('notif', ['type' => 'info', 'message' => 'Disbursement item ' . DisbursementItem::find($di_id)->name . ' is updated.']);
     }
 
     /**
@@ -109,10 +137,17 @@ class DisbursementItemController extends Controller
         $name = $disbursementItem->name;
         // update necessary data
         $this->updateProgramDisbursement($disbursementItem->program_id, false, $disbursementItem->price);
-        // delete budget item
+        // delete disbursement item
         Storage::disk('public')->delete('images/receipt/disbursement/' . $disbursementItem->reciept);
         $disbursementItem->delete();
-
+        // delete blaterian disbursement
+        $foods_income = FoodsIncome::where('category', 'program disbursement')->where('category_id', $di_id)->first();
+        // $goods_income = GoodsIncome::where('category', 'program disbursement')->where('category_id', $di_id)->first();
+        $blaterian_disbursement = $foods_income ? $foods_income : $foods_income;
+        if ($blaterian_disbursement) {
+            $blaterian_disbursement->delete();
+            BlaterianBalanceController::refreshBalance();
+        }
         return redirect()->back()->with('notif', ['type' => 'warning', 'message' => 'Disbursement item ' . $name . ' has been deleted.']);
     }
 

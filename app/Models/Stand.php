@@ -93,20 +93,4 @@ class Stand extends Model
     {
         return $this->hasMany(StandSales::class, 'stand_id');
     }
-
-    /**
-     * foods income of stand
-     */
-    public function foods_income(): HasOne
-    {
-        return $this->hasOne(FoodsIncome::class, 'category_id');
-    }
-
-    /**
-     * foods income of stand
-     */
-    public function foods_expense(): HasOne
-    {
-        return $this->hasOne(FoodsExpense::class, 'category_id');
-    }
 }

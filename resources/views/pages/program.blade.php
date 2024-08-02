@@ -590,7 +590,26 @@
                                                         <x-input-error :messages="$errors->get('disbursement_reciept')" class="mt-2" />
                                                     </div>
                                                 </div>
-
+                                                <!-- Blaterian Disbursement -->
+                                                <div class="row g-3 align-items-center mt-1">
+                                                    <div class="col-3"></div>
+                                                    <div class="col-8 ms-2">
+                                                        <label for="blaterian" class="inline-flex items-center">
+                                                            <input id="blaterian" type="checkbox"
+                                                                onchange="show_content('blaterian','blaterian_disbursement')"
+                                                                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
+                                                            <span
+                                                                class="ms-2 text-sm text-gray-600">{{ __('Blaterian Disbursement') }}</span>
+                                                        </label>
+                                                        <select id="blaterian_disbursement"
+                                                            name="blaterian_disbursement"
+                                                            class="form-select form-select-sm mt-3 mb-3 d-none">
+                                                            <option value="foods" selected>Foods
+                                                            </option>
+                                                            <option value="goods">Goods</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="submit" class="btn shadow border-primary">Add</button>
@@ -1122,6 +1141,17 @@
             } else {
                 receiptUpload.removeAttribute('hidden');
                 receiptSame.setAttribute('hidden', '');
+            }
+        }
+
+        function show_content(anchor_id, content_id) {
+            var anchor = document.getElementById(anchor_id);
+            var content = document.getElementById(content_id);
+
+            if (anchor.checked == true) {
+                content.classList.remove('d-none');
+            } else {
+                content.classList.add('d-none');
             }
         }
     </script>

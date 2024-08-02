@@ -25,11 +25,10 @@ class BlaterianBalanceController extends Controller
         $request->session()->put('income', $income);
         $request->session()->put('expense', $expense);
         // Stand filter
-        $income_list = FoodsIncome::with(['stand', 'program'])->orderBy($income['category'], $income['order'])->get();
-        $expense_list = FoodsExpense::with(['stand', 'program'])->orderBy($expense['category'], $expense['order'])->get();
+        $income_list = FoodsIncome::with(['program'])->orderBy($income['category'], $income['order'])->get();
+        $expense_list = FoodsExpense::with(['program'])->orderBy($expense['category'], $expense['order'])->get();
         // dd($income_list);
         $data = [
-            'balance_formated' => format_currency(500, 'IDR'),
             'title' => 'Blaterian Foods Balance',
             'balance' => BlaterianBalance::find(1),
             'income' => $income_list,

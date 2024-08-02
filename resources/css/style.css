@@ -1,5 +1,5 @@
 .scroll-container {
-    height: 400px; /* Set the maximum height of the container */
+    height: 360px; /* Set the maximum height of the container */
     overflow-y: auto; /* Enable vertical scrolling */
     scrollbar-width: none; /* For Firefox */
     -ms-overflow-style: none; /* For Internet Explorer and Edge */

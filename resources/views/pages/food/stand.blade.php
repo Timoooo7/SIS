@@ -604,7 +604,7 @@ use Illuminate\Support\Carbon;
                                                         <div class="col-8 ms-2">
                                                             <div class="row" id="receipt_upload">
                                                                 <input type="file"
-                                                                    class="form-control form-control-sm ms-3"
+                                                                    class="form-control form-control-sm ms-2"
                                                                     style="width: 92%" name="expense_reciept"
                                                                     id="expense_reciept"
                                                                     value="{{ old('expense_reciept') }}">
@@ -628,7 +628,7 @@ use Illuminate\Support\Carbon;
                                                                     </select>
                                                                 </div>
                                                             </div>
-                                                            @if ($stand->expense > 0)
+                                                            @if ($stand->expense()->count() > 0)
                                                                 <label for="same_receipt_check"
                                                                     class="inline-flex items-center mt-1"
                                                                     onclick="sameReceipt()">
@@ -792,7 +792,7 @@ use Illuminate\Support\Carbon;
                                                 @endif
                                             </button>
                                         </td>
-                                        <td>{{ $expense_item->updated_at->format('d/M/Y H:i:s') }}</td>
+                                        <td>{{ format_date_time($expense_item->updated_at) }}</td>
                                     </tr>
                                     <?php $i++; ?>
                                 @endforeach

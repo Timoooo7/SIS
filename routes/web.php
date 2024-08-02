@@ -42,7 +42,7 @@ Route::middleware(['auth', 'verified', 'staff'])->group(function () {
     Route::get('/seeo/cashflow', [CashFlowController::class, 'index'])->name('cashflow');
     Route::get('/blaterian/foods/sales', [SalesController::class, 'sales'])->name('food.sales');
     Route::get('/blaterian/foods/balance', [BlaterianBalanceController::class, 'balance'])->name('food.balance');
-    Route::get('/blaterian/foods/stand/{array_id}', [StandController::class, 'stand'])->name('food.stand');
+    Route::get('/blaterian/foods/stand/{array_id}/{show_id?}', [StandController::class, 'stand'])->name('food.stand');
     Route::get('/blaterian/good', [GoodController::class, 'sales'])->name('good');
     Route::get('/food/balance/{balance}/{category}/{order}', [BlaterianBalanceController::class, 'findBalance'])->name('food.balance.find');
     Route::put('/food/stand', [StandController::class, 'findStand'])->name('food.stand.find');

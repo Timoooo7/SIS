@@ -23,7 +23,7 @@ class StandController extends Controller
     /**
      * Display foods stand.
      */
-    public function stand(Request $request, $array_id = 0): View
+    public function stand(Request $request, $array_id, $show_stand_id = 0): View
     {
         $category = session('category', 'date');
         $order = session('order', 'desc');
@@ -32,6 +32,10 @@ class StandController extends Controller
         $request->session()->put('order', $order);
         // Stand filter
         $stand = Stand::orderBy($category, $order)->get();
+        // Show specific stand
+        if ($show_stand_id > 0) {
+            $array_id = collect($stand)->where('id', $show_stand_id)->keys()->first();
+        }
         if (count($stand) > 0) {
             $active_stand = $stand[$array_id];
             $stand_expenses = StandExpense::where('stand_id', '=', $active_stand->id);

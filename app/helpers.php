@@ -26,7 +26,8 @@ if (!function_exists('format_date_time')) {
           return compact_date_time($date_time);
           break;
       }
-    } elseif ($type == 'short') {
+    } elseif ($type == 'complete') {
+      return complete_date_time($date_time);
     }
   }
 

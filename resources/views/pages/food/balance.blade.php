@@ -92,7 +92,7 @@ use Illuminate\Support\Carbon;
                             </div>
                             <div class="col-auto">
                                 <p class="text-white mb-1 text-opacity-75 fs-6 fw-light ">Balance</p>
-                                <span class="fs-3">{{ $balance_formated }}</span>
+                                <span class="fs-3">{{ format_currency($balance->balance, 'IDR') }}</span>
                             </div>
                         </div>
                     </div>
@@ -145,8 +145,12 @@ use Illuminate\Support\Carbon;
                 <li class="nav-item"><a id="tab_1" onclick="show_tab(1)" class="nav-link">Income</a></li>
                 <li class="nav-item"><a id="tab_2" onclick="show_tab(2)" class="nav-link">Expense</a></li>
             </ul>
+            {{-- Profit Graph --}}
+            <div class="col-4 d-none d-lg-block">
+                graph
+            </div>
             {{-- Income list --}}
-            <div id="content_1" class="col-12 px-4 px-lg-2 col-lg-6 ">
+            <div id="content_1" class="col-12 px-4 px-lg-2 col-lg-4 ">
                 <div class="bg-secondary bg-opacity-10 rounded-md shadow-sm">
                     {{-- Income filter control --}}
                     <div class="bg-secondary rounded-md text-white d-flex justify-content-between">
@@ -203,24 +207,34 @@ use Illuminate\Support\Carbon;
                     </div>
                     {{-- Income list item --}}
                     <div class="scroll-container mt-2">
+                        <?php
+                        function in_category_route($name, $id, $cat_id = 1)
+                        {
+                            return $name == 'stand income' ? route('food.stand', ['array_id' => 0, 'show_id' => $id]) : route('program', ['id' => $cat_id]);
+                        }
+                        ?>
                         @foreach ($income as $in)
-                            <div class="card mb-1 mx-2 border-0 bg-white ">
-                                <div class="row m-0 p-0">
-                                    <p class="h5 mb-0 mt-2">{{ format_currency($in->price, 'IDR') }}</p>
-                                    <p class="text-dark text-opacity-50 mb-0 text-sm">
-                                        {{ $in->category . ': ' . $in->category_detail()->name }}
-                                        <span class="text-xs fw-light text-secondary float-end">
-                                            {{ 'last updated at ' . format_date_time($in->updated_at, 'auto') }}
-                                        </span>
-                                    </p>
+                            <a target="_blank"
+                                href="{{ in_category_route($in->category, $in->category_id, $in->category_detail()->program_id) }}"
+                                class="text-decoration-none">
+                                <div class="card mb-2 mx-2 border-0 bg-white ">
+                                    <div class="row m-0 p-0">
+                                        <p class="h5 mb-0 mt-2">{{ format_currency($in->price, 'IDR') }}</p>
+                                        <p class="text-dark text-opacity-50 mb-0 text-sm">
+                                            {{ $in->category . ': ' . $in->category_detail()->name }}
+                                            <span class="text-xs fw-light text-secondary float-end">
+                                                {{ 'last updated at ' . format_date_time($in->updated_at) }}
+                                            </span>
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
                         @endforeach
                     </div>
                 </div>
             </div>
             {{-- Expense list --}}
-            <div id="content_2" class="col-12 px-4 px-lg-2 col-lg-6">
+            <div id="content_2" class="col-12 px-4 px-lg-2 col-lg-4">
                 <div class="bg-secondary bg-opacity-10 rounded-md shadow-sm">
                     {{-- Expense filter control --}}
                     <div class="bg-secondary rounded-md text-white d-flex justify-content-between">
@@ -277,18 +291,27 @@ use Illuminate\Support\Carbon;
                     </div>
                     {{-- Expense list item --}}
                     <div class="scroll-container mt-2">
+                        <?php
+                        function ex_category_route($ctgry, $id)
+                        {
+                            return $ctgry == 'stand expense' ? route('food.stand', ['array_id' => 0, 'show_id' => $id]) : route('food.stand', ['array_id' => 0, 'show_id' => $id]);
+                        }
+                        ?>
                         @foreach ($expense as $ex)
-                            <div class="card mb-1 mx-2 border-0 bg-white ">
-                                <div class="row m-0 p-0">
-                                    <p class="h5 mb-0 mt-2">{{ format_currency($ex->price, 'IDR') }}</p>
-                                    <p class="text-dark text-opacity-50 mb-0 text-sm">
-                                        {{ $ex->category . ': ' . $ex->category_detail()->name }}
-                                        <span class="text-xs fw-light text-secondary float-end">
-                                            {{ 'last updated at ' . format_date_time($ex->updated_at, 'auto') }}
-                                        </span>
-                                    </p>
+                            <a target="_blank" href="{{ ex_category_route($ex->category, $ex->category_id) }}"
+                                class="text-decoration-none">
+                                <div class="card mb-2 mx-2 border-0 bg-white ">
+                                    <div class="row m-0 p-0">
+                                        <p class="h5 mb-0 mt-2">{{ format_currency($ex->price, 'IDR') }}</p>
+                                        <p class="text-dark text-opacity-50 mb-0 text-sm">
+                                            {{ $ex->category . ': ' . $ex->category_detail()->name }}
+                                            <span class="text-xs fw-light text-secondary float-end">
+                                                {{ 'last updated at ' . format_date_time($ex->updated_at, 'auto') }}
+                                            </span>
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
                         @endforeach
                     </div>
                 </div>

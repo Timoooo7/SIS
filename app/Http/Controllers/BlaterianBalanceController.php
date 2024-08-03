@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\BlaterianBalance;
 use App\Models\FoodsExpense;
 use App\Models\FoodsIncome;
+use App\Models\Stand;
 use Illuminate\Http\Request;
-use NumberFormatter;
+use Illuminate\Support\Carbon;
 
 class BlaterianBalanceController extends Controller
 {
@@ -27,12 +28,35 @@ class BlaterianBalanceController extends Controller
         // Stand filter
         $income_list = FoodsIncome::with(['program'])->orderBy($income['category'], $income['order'])->get();
         $expense_list = FoodsExpense::with(['program'])->orderBy($expense['category'], $expense['order'])->get();
-        // dd($income_list);
+        // Chart Data
+        $chart_raw = Stand::orderBy('date', 'asc')->get(['date', 'profit', 'expense', 'income']);
+        $chart_group = $chart_raw->groupBy(function ($chart_raw) {
+            return date_format(date_create($chart_raw->date), 'm');
+        });
+        $profit_chart = $chart_group->map(function ($profit) {
+            return $profit->sum('profit');
+        });
+        $expense_chart = $chart_group->map(function ($expense) {
+            return $expense->sum('expense');
+        });
+        $income_chart = $chart_group->map(function ($income) {
+            return $income->sum('income');
+        });
+        $chart = [
+            'month' => $profit_chart->keys()->map(function ($month) {
+                return Carbon::createFromFormat('m', $month)->format('F');
+            }),
+            'profit' => $profit_chart->values(),
+            'expense' => $expense_chart->values(),
+            'income' => $income_chart->values(),
+        ];
+        // dd($profit);
         $data = [
             'title' => 'Blaterian Foods Balance',
             'balance' => BlaterianBalance::find(1),
             'income' => $income_list,
             'expense' => $expense_list,
+            'chart' => $chart,
             'filter' => [
                 'income' => $income,
                 'expense' => $expense,

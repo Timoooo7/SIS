@@ -140,194 +140,227 @@ use Illuminate\Support\Carbon;
 
         {{-- Content --}}
         <div class="row mt-3">
-            {{-- Content Tab Navigation for Medium and Smaller screen --}}
-            <ul class="nav nav-tabs mx-4 d-lg-none">
-                <li class="nav-item"><a id="tab_1" onclick="show_tab(1)" class="nav-link">Income</a></li>
-                <li class="nav-item"><a id="tab_2" onclick="show_tab(2)" class="nav-link">Expense</a></li>
-            </ul>
-            {{-- Profit Graph --}}
-            <div class="col-4 d-none d-lg-block">
-                graph
+
+            {{-- Charts --}}
+            <div class="col-12 col-lg-6 ">
+                <?php
+                // Prepare dataset for profit chart
+                $profitChartData = [
+                    'labels' => $chart['month'],
+                    'datasets' => [
+                        [
+                            'label' => 'Profit',
+                            'data' => $chart['profit'],
+                            'borderColor' => ['rgba(54, 162, 235, 1)'],
+                            'borderWidth' => 1,
+                        ],
+                        [
+                            'label' => 'Expense',
+                            'data' => $chart['expense'],
+                            'borderColor' => ['rgba(150, 150, 150, 1)'],
+                            'borderWidth' => 1,
+                        ],
+                        [
+                            'label' => 'Income',
+                            'data' => $chart['income'],
+                            'borderColor' => ['rgba(20, 20, 20, 1)'],
+                            'borderWidth' => 1,
+                        ],
+                    ],
+                ];
+                ?>
+                <canvas id="profitChart" class="m-0  bg-white shadow-sm mx-3 mx-md-1 px-3 mb-3 rounded-md"></canvas>
             </div>
-            {{-- Income list --}}
-            <div id="content_1" class="col-12 px-4 px-lg-2 col-lg-4 ">
-                <div class="bg-secondary bg-opacity-10 rounded-md shadow-sm">
-                    {{-- Income filter control --}}
-                    <div class="bg-secondary rounded-md text-white d-flex justify-content-between">
-                        {{-- go to income detail page --}}
-                        <span
-                            class="bg-white bg-opacity-75 text-dark text-sm align-self-start fw-bold px-1 rounded-sm mx-2 mt-2 ">
-                            <span class="d-none d-md-inline">INCOME FILTER</span>
-                            <span class="d-md-none">filter</span>
-                        </span>
-                        <div class="">
+            <div class="col-12 col-lg-6">
+                <div class="row">
+                    {{-- Content Tab Navigation for Medium and Smaller screen --}}
+                    <ul class="nav nav-tabs mx-4">
+                        <li class="nav-item"><a id="tab_1" onclick="show_tab(1)" class="nav-link">Income</a></li>
+                        <li class="nav-item"><a id="tab_2" onclick="show_tab(2)" class="nav-link">Expense</a></li>
+                    </ul>
+                    {{-- Income list --}}
+                    <div id="content_1" class="col-12 px-4 ">
+                        <div class="bg-secondary bg-opacity-10 rounded-md shadow-sm">
+                            {{-- Income filter control --}}
+                            <div class="bg-secondary rounded-md text-white d-flex justify-content-between">
+                                {{-- go to income detail page --}}
+                                <span
+                                    class="bg-white bg-opacity-75 text-dark text-sm align-self-start fw-bold px-1 rounded-sm mx-2 mt-2 ">
+                                    <span class="d-none d-md-inline">INCOME FILTER</span>
+                                    <span class="d-md-none">filter</span>
+                                </span>
+                                <div class="">
 
-                            {{-- Amount filter --}}
-                            <?php $filter_income_amount = $filter['income']['category'] == 'price' ? $filter['income']['order'] : 'desc'; ?>
-                            @switch($filter_income_amount)
-                                @case('asc')
-                                    <a href="{{ route('food.balance.find', ['balance' => 'income', 'category' => 'price', 'order' => 'desc']) }}"
-                                        class="text-decoration-none">
-                                        <button class="btn btn-secondary text-white text-opacity-75 fw-light text-sm">
-                                            Income <i class="bi bi-arrow-up text-white"></i>
-                                        </button>
-                                    </a>
-                                @break
+                                    {{-- Amount filter --}}
+                                    <?php $filter_income_amount = $filter['income']['category'] == 'price' ? $filter['income']['order'] : 'desc'; ?>
+                                    @switch($filter_income_amount)
+                                        @case('asc')
+                                            <a href="{{ route('food.balance.find', ['balance' => 'income', 'category' => 'price', 'order' => 'desc']) }}"
+                                                class="text-decoration-none">
+                                                <button class="btn btn-secondary text-white text-opacity-75 fw-light text-sm">
+                                                    Income <i class="bi bi-arrow-up text-white"></i>
+                                                </button>
+                                            </a>
+                                        @break
 
-                                @default
-                                    <a href="{{ route('food.balance.find', ['balance' => 'income', 'category' => 'price', 'order' => 'asc']) }}"
-                                        class="text-decoration-none">
-                                        <button class="btn btn-secondary text-white text-opacity-75 fw-light text-sm">
-                                            Income <i class="bi bi-arrow-down text-white"></i>
-                                        </button>
-                                    </a>
-                            @endswitch
-                            {{-- Last Udpate filter --}}
-                            <?php $filter_income_update = $filter['income']['category'] == 'updated_at' ? $filter['income']['order'] : 'desc'; ?>
-                            @switch($filter_income_update)
-                                @case('asc')
-                                    <a href="{{ route('food.balance.find', ['balance' => 'income', 'category' => 'updated_at', 'order' => 'desc']) }}"
-                                        class="text-decoration-none">
-                                        <button class="btn btn-secondary text-white text-opacity-75 fw-light text-sm">
-                                            Last Updated<i class="bi bi-arrow-up text-white"></i>
-                                        </button>
-                                    </a>
-                                @break
+                                        @default
+                                            <a href="{{ route('food.balance.find', ['balance' => 'income', 'category' => 'price', 'order' => 'asc']) }}"
+                                                class="text-decoration-none">
+                                                <button class="btn btn-secondary text-white text-opacity-75 fw-light text-sm">
+                                                    Income <i class="bi bi-arrow-down text-white"></i>
+                                                </button>
+                                            </a>
+                                    @endswitch
+                                    {{-- Last Udpate filter --}}
+                                    <?php $filter_income_update = $filter['income']['category'] == 'updated_at' ? $filter['income']['order'] : 'desc'; ?>
+                                    @switch($filter_income_update)
+                                        @case('asc')
+                                            <a href="{{ route('food.balance.find', ['balance' => 'income', 'category' => 'updated_at', 'order' => 'desc']) }}"
+                                                class="text-decoration-none">
+                                                <button class="btn btn-secondary text-white text-opacity-75 fw-light text-sm">
+                                                    Last Updated<i class="bi bi-arrow-up text-white"></i>
+                                                </button>
+                                            </a>
+                                        @break
 
-                                @default
-                                    <a href="{{ route('food.balance.find', ['balance' => 'income', 'category' => 'updated_at', 'order' => 'asc']) }}"
-                                        class="text-decoration-none">
-                                        <button class="btn btn-secondary text-white text-opacity-75 fw-light text-sm">
-                                            Last Updated<i class="bi bi-arrow-down text-white"></i>
-                                        </button>
-                                    </a>
-                            @endswitch
-                        </div>
-
-                    </div>
-                    {{-- Income list item --}}
-                    <div class="scroll-container mt-2">
-                        <?php
-                        function in_category_route($name, $id, $cat_id = 1)
-                        {
-                            return $name == 'stand income' ? route('food.stand', ['array_id' => 0, 'show_id' => $id]) : route('program', ['id' => $cat_id]);
-                        }
-                        ?>
-                        @foreach ($income as $in)
-                            <a target="_blank"
-                                href="{{ in_category_route($in->category, $in->category_id, $in->category_detail()->program_id) }}"
-                                class="text-decoration-none">
-                                <div class="card mb-2 mx-2 border-0 bg-white ">
-                                    <div class="row m-0 p-0">
-                                        <p class="h5 mb-0 mt-2">{{ format_currency($in->price, 'IDR') }}</p>
-                                        <p class="text-dark text-opacity-50 mb-0 text-sm">
-                                            {{ $in->category . ': ' . $in->category_detail()->name }}
-                                            <span class="text-xs fw-light text-secondary float-end">
-                                                {{ 'last updated at ' . format_date_time($in->updated_at) }}
-                                            </span>
-                                        </p>
-                                    </div>
+                                        @default
+                                            <a href="{{ route('food.balance.find', ['balance' => 'income', 'category' => 'updated_at', 'order' => 'asc']) }}"
+                                                class="text-decoration-none">
+                                                <button class="btn btn-secondary text-white text-opacity-75 fw-light text-sm">
+                                                    Last Updated<i class="bi bi-arrow-down text-white"></i>
+                                                </button>
+                                            </a>
+                                    @endswitch
                                 </div>
-                            </a>
-                        @endforeach
+
+                            </div>
+                            {{-- Income list item --}}
+                            <div class="scroll-container mt-2">
+                                <?php
+                                function in_category_route($name, $id, $cat_id = 1)
+                                {
+                                    return $name == 'stand income' ? route('food.stand', ['array_id' => 0, 'show_id' => $id]) : route('program', ['id' => $cat_id]);
+                                }
+                                ?>
+                                @foreach ($income as $in)
+                                    <a target="_blank"
+                                        href="{{ in_category_route($in->category, $in->category_id, $in->category_detail()->program_id) }}"
+                                        class="text-decoration-none">
+                                        <div class="card mb-2 mx-2 border-0 bg-white ">
+                                            <div class="row m-0 p-0">
+                                                <p class="h5 mb-0 mt-2">{{ format_currency($in->price, 'IDR') }}</p>
+                                                <p class="text-dark text-opacity-50 mb-0 text-sm">
+                                                    {{ $in->category . ': ' . $in->category_detail()->name }}
+                                                    <span class="text-xs fw-light text-secondary float-end">
+                                                        {{ 'last updated at ' . format_date_time($in->updated_at) }}
+                                                    </span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                    {{-- Expense list --}}
+                    <div id="content_2" class="col-12 px-4 ">
+                        <div class="bg-secondary bg-opacity-10 rounded-md shadow-sm">
+                            {{-- Expense filter control --}}
+                            <div class="bg-secondary rounded-md text-white d-flex justify-content-between">
+                                {{-- go to expense detail page --}}
+                                <span
+                                    class="bg-white bg-opacity-75 text-dark text-sm align-self-start fw-bold px-1 rounded-sm mx-2 mt-2 ">
+                                    <span class="d-none d-md-inline">EXPENSE FILTER</span>
+                                    <span class="d-md-none">filter</span>
+                                </span>
+                                <div class="">
+
+                                    {{-- Amount filter --}}
+                                    <?php $filter_expense_amount = $filter['expense']['category'] == 'price' ? $filter['expense']['order'] : 'desc'; ?>
+                                    @switch($filter_expense_amount)
+                                        @case('asc')
+                                            <a href="{{ route('food.balance.find', ['balance' => 'expense', 'category' => 'price', 'order' => 'desc']) }}"
+                                                class="text-decoration-none">
+                                                <button class="btn btn-secondary text-white text-opacity-75 fw-light text-sm">
+                                                    Expense <i class="bi bi-arrow-up text-white"></i>
+                                                </button>
+                                            </a>
+                                        @break
+
+                                        @default
+                                            <a href="{{ route('food.balance.find', ['balance' => 'expense', 'category' => 'price', 'order' => 'asc']) }}"
+                                                class="text-decoration-none">
+                                                <button class="btn btn-secondary text-white text-opacity-75 fw-light text-sm">
+                                                    Expense <i class="bi bi-arrow-down text-white"></i>
+                                                </button>
+                                            </a>
+                                    @endswitch
+                                    {{-- Last Udpate filter --}}
+                                    <?php $filter_expense_update = $filter['expense']['category'] == 'updated_at' ? $filter['expense']['order'] : 'desc'; ?>
+                                    @switch($filter_expense_update)
+                                        @case('asc')
+                                            <a href="{{ route('food.balance.find', ['balance' => 'expense', 'category' => 'updated_at', 'order' => 'desc']) }}"
+                                                class="text-decoration-none">
+                                                <button class="btn btn-secondary text-white text-opacity-75 fw-light text-sm">
+                                                    Last Updated<i class="bi bi-arrow-up text-white"></i>
+                                                </button>
+                                            </a>
+                                        @break
+
+                                        @default
+                                            <a href="{{ route('food.balance.find', ['balance' => 'expense', 'category' => 'updated_at', 'order' => 'asc']) }}"
+                                                class="text-decoration-none">
+                                                <button class="btn btn-secondary text-white text-opacity-75 fw-light text-sm">
+                                                    Last Updated<i class="bi bi-arrow-down text-white"></i>
+                                                </button>
+                                            </a>
+                                    @endswitch
+                                </div>
+
+                            </div>
+                            {{-- Expense list item --}}
+                            <div class="scroll-container mt-2">
+                                <?php
+                                function ex_category_route($ctgry, $id)
+                                {
+                                    return $ctgry == 'stand expense' ? route('food.stand', ['array_id' => 0, 'show_id' => $id]) : route('food.stand', ['array_id' => 0, 'show_id' => $id]);
+                                }
+                                ?>
+                                @foreach ($expense as $ex)
+                                    <a target="_blank"
+                                        href="{{ ex_category_route($ex->category, $ex->category_id) }}"
+                                        class="text-decoration-none">
+                                        <div class="card mb-2 mx-2 border-0 bg-white ">
+                                            <div class="row m-0 p-0">
+                                                <p class="h5 mb-0 mt-2">{{ format_currency($ex->price, 'IDR') }}</p>
+                                                <p class="text-dark text-opacity-50 mb-0 text-sm">
+                                                    {{ $ex->category . ': ' . $ex->category_detail()->name }}
+                                                    <span class="text-xs fw-light text-secondary float-end">
+                                                        {{ 'last updated at ' . format_date_time($ex->updated_at, 'auto') }}
+                                                    </span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            {{-- Expense list --}}
-            <div id="content_2" class="col-12 px-4 px-lg-2 col-lg-4">
-                <div class="bg-secondary bg-opacity-10 rounded-md shadow-sm">
-                    {{-- Expense filter control --}}
-                    <div class="bg-secondary rounded-md text-white d-flex justify-content-between">
-                        {{-- go to expense detail page --}}
-                        <span
-                            class="bg-white bg-opacity-75 text-dark text-sm align-self-start fw-bold px-1 rounded-sm mx-2 mt-2 ">
-                            <span class="d-none d-md-inline">EXPENSE FILTER</span>
-                            <span class="d-md-none">filter</span>
-                        </span>
-                        <div class="">
 
-                            {{-- Amount filter --}}
-                            <?php $filter_expense_amount = $filter['expense']['category'] == 'price' ? $filter['expense']['order'] : 'desc'; ?>
-                            @switch($filter_expense_amount)
-                                @case('asc')
-                                    <a href="{{ route('food.balance.find', ['balance' => 'expense', 'category' => 'price', 'order' => 'desc']) }}"
-                                        class="text-decoration-none">
-                                        <button class="btn btn-secondary text-white text-opacity-75 fw-light text-sm">
-                                            Expense <i class="bi bi-arrow-up text-white"></i>
-                                        </button>
-                                    </a>
-                                @break
 
-                                @default
-                                    <a href="{{ route('food.balance.find', ['balance' => 'expense', 'category' => 'price', 'order' => 'asc']) }}"
-                                        class="text-decoration-none">
-                                        <button class="btn btn-secondary text-white text-opacity-75 fw-light text-sm">
-                                            Expense <i class="bi bi-arrow-down text-white"></i>
-                                        </button>
-                                    </a>
-                            @endswitch
-                            {{-- Last Udpate filter --}}
-                            <?php $filter_expense_update = $filter['expense']['category'] == 'updated_at' ? $filter['expense']['order'] : 'desc'; ?>
-                            @switch($filter_expense_update)
-                                @case('asc')
-                                    <a href="{{ route('food.balance.find', ['balance' => 'expense', 'category' => 'updated_at', 'order' => 'desc']) }}"
-                                        class="text-decoration-none">
-                                        <button class="btn btn-secondary text-white text-opacity-75 fw-light text-sm">
-                                            Last Updated<i class="bi bi-arrow-up text-white"></i>
-                                        </button>
-                                    </a>
-                                @break
-
-                                @default
-                                    <a href="{{ route('food.balance.find', ['balance' => 'expense', 'category' => 'updated_at', 'order' => 'asc']) }}"
-                                        class="text-decoration-none">
-                                        <button class="btn btn-secondary text-white text-opacity-75 fw-light text-sm">
-                                            Last Updated<i class="bi bi-arrow-down text-white"></i>
-                                        </button>
-                                    </a>
-                            @endswitch
-                        </div>
-
-                    </div>
-                    {{-- Expense list item --}}
-                    <div class="scroll-container mt-2">
-                        <?php
-                        function ex_category_route($ctgry, $id)
-                        {
-                            return $ctgry == 'stand expense' ? route('food.stand', ['array_id' => 0, 'show_id' => $id]) : route('food.stand', ['array_id' => 0, 'show_id' => $id]);
-                        }
-                        ?>
-                        @foreach ($expense as $ex)
-                            <a target="_blank" href="{{ ex_category_route($ex->category, $ex->category_id) }}"
-                                class="text-decoration-none">
-                                <div class="card mb-2 mx-2 border-0 bg-white ">
-                                    <div class="row m-0 p-0">
-                                        <p class="h5 mb-0 mt-2">{{ format_currency($ex->price, 'IDR') }}</p>
-                                        <p class="text-dark text-opacity-50 mb-0 text-sm">
-                                            {{ $ex->category . ': ' . $ex->category_detail()->name }}
-                                            <span class="text-xs fw-light text-secondary float-end">
-                                                {{ 'last updated at ' . format_date_time($ex->updated_at, 'auto') }}
-                                            </span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
     <script>
         var default_tab = sessionStorage.getItem('default_tab');
         window.onload = function() {
-            if (window.innerWidth < 992) {
-                if (default_tab !== null) {
-                    show_tab(default_tab);
-                } else {
-                    show_tab(1);
-                }
+            if (window.innerWidth < 992) {}
+            if (default_tab !== null) {
+                show_tab(default_tab);
+            } else {
+                show_tab(1);
             }
         };
 
@@ -351,6 +384,35 @@ use Illuminate\Support\Carbon;
 
             sessionStorage.setItem('default_tab', target);
         }
+
+        // Charts
+        var profitChart = document.getElementById('profitChart').getContext('2d');
+        var myChart = new Chart(profitChart, {
+            type: 'line',
+            data: @json($profitChartData),
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Stand Chart',
+                        position: 'top',
+                        font: {
+                            size: 18
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Price (IDR)'
+                        },
+                        beginAtZero: true
+                    }
+                }
+
+            }
+        });
     </script>
 
 </x-app-layout>

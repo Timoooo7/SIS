@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
         );
 
         // Seeds balance table
-        DB::table('roles')->insert(
+        DB::table('blaterian_balance')->insert(
             [
                 [
                     'expense' => 0,

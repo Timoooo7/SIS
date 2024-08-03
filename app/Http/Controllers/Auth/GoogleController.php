@@ -39,7 +39,7 @@ class GoogleController extends Controller
     private function login_google(User $user)
     {
         Auth::login($user);
-        return $user->roles_id ? redirect()->route('intro')->with('notif', ['type' => 'info', 'message' => 'Hi ' . $user->name . ', welcome to Blaterian!']) : redirect()->route('dashboard')->with('notif', ['type' => 'info', 'message' => 'Hi ' . $user->name . ', welcome to SEEO Information System!']);
+        return $user->roles_id != null ? redirect()->route('intro')->with('notif', ['type' => 'info', 'message' => 'Hi ' . $user->name . ', welcome to Blaterian!']) : redirect()->route('dashboard')->with('notif', ['type' => 'info', 'message' => 'Hi ' . $user->name . ', welcome to SEEO Information System!']);
     }
 
     // google register authentication 

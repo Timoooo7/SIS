@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('.complete.register.google') }}">
+    <form method="POST" action="{{ route('.\complete.register.google') }}">
         @csrf
 
         <!-- Google User Id -->

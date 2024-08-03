@@ -24,7 +24,7 @@ class GoogleController extends Controller
             $findUserGoogle = User::where('id_google', $user->id)->first();
             $findUserMail = User::where('email', $user->email)->first();
             if ($findUserGoogle && $findUserMail) {
-                return  $findUserGoogle->password ? $this->login_google($findUserGoogle) : redirect()->route('register.google', ['id' => $user->id_google]);
+                return  $findUserGoogle->password ? $this->login_google($findUserGoogle) : redirect()->route('register.google', ['id' => $findUserGoogle->id_google]);
             } else if ($findUserMail) {
                 return $this->register_google($findUserMail, $user->id);
             } else {

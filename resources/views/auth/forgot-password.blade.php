@@ -1,6 +1,12 @@
-<x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+<x-auth-layout>
+    <div class="row px-2 ">
+        <div class="col-12 border-secondary border-bottom d-flex pb-1 mb-3 px-0">
+            <span class="h4 text-primary-emphasis my-auto me-auto">{{ 'Reset Password' }}</span>
+        </div>
+    </div>
+    <div class="text-secondary" style="text-align: justify;">
+        {{ __('Forgot your password? No problem.') }} <br>
+        {{ __('Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
     </div>
 
     <!-- Session Status -->
@@ -10,16 +16,21 @@
         @csrf
 
         <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div class="row justify-content-center mt-2">
+            <div class="col-4 col-lg-3">
+                <label for="email" class="form-label my-1">Email</label>
+            </div>
+            <div class="col-8 col-lg-7">
+                <input type="text" class="form-control form-control-sm" name="email" id="email"
+                    placeholder="your@mail.com" value="{{ old('email') }}" autocomplete="username" autofocus required>
+                <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            </div>
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
+        <div class="mt-3">
+            <button type="submit" class="btn btn-sm btn-primary w-100">
+                {{ __('Send Password Reset Link') }} <i class="bi bi-envelope-arrow-up border-start ms-3 ps-3"></i>
+            </button>
         </div>
     </form>
-</x-guest-layout>
+</x-auth-layout>

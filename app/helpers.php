@@ -10,7 +10,7 @@ if (!function_exists('format_currency')) {
 }
 
 if (!function_exists('format_date')) {
-  function format_date($date, $type = 'day')
+  function format_date($date, $type = 'default')
   {
     switch ($type) {
       case 'day':
@@ -30,47 +30,46 @@ if (!function_exists('format_date')) {
         break;
     }
   }
+}
+if (!function_exists('format_date_time')) {
+  function format_date_time($date_time, $type = 'auto')
+  {
+    if ($type == 'auto') {
+      switch (true) {
+        case $date_time->diffInDays(now()) < 7:
+          return week_date_time($date_time);
+          break;
 
-  if (!function_exists('format_date_time')) {
-    function format_date_time($date_time, $type = 'auto')
-    {
-      if ($type == 'auto') {
-        switch (true) {
-          case $date_time->diffInDays(now()) < 7:
-            return week_date_time($date_time);
-            break;
+        case now()->year - $date_time->year < 1:
+          return year_date_time($date_time);
+          break;
 
-          case now()->year - $date_time->year < 1:
-            return year_date_time($date_time);
-            break;
-
-          default:
-            return compact_date_time($date_time);
-            break;
-        }
-      } elseif ($type == 'complete') {
-        return complete_date_time($date_time);
+        default:
+          return compact_date_time($date_time);
+          break;
       }
+    } elseif ($type == 'complete') {
+      return complete_date_time($date_time);
     }
+  }
 
-    function week_date_time($date_time)
-    {
-      return $date_time->format('D, H:i');
-    }
+  function week_date_time($date_time)
+  {
+    return $date_time->format('D, H:i');
+  }
 
-    function year_date_time($date_time)
-    {
-      return $date_time->format('d M Y H:i');
-    }
+  function year_date_time($date_time)
+  {
+    return $date_time->format('d M Y H:i');
+  }
 
-    function complete_date_time($date_time)
-    {
-      return $date_time->format('D, d M Y H:i:s a');
-    }
+  function complete_date_time($date_time)
+  {
+    return $date_time->format('D, d M Y H:i:s a');
+  }
 
-    function compact_date_time($date_time)
-    {
-      return $date_time->format('d/m/y H:i');
-    }
+  function compact_date_time($date_time)
+  {
+    return $date_time->format('d/m/y H:i');
   }
 }

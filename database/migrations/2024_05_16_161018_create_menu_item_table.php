@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('menu_item', function (Blueprint $table) {
+        Schema::create('foods_menu', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('volume')->nullable();
@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('mass_unit')->nullable();
             $table->integer('price');
             $table->tinyInteger('sale')->default(0);
+            $table->tinyInteger('stock')->default(0);
             $table->integer('stand_id');
             $table->softDeletes();
             $table->timestamps();
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('menu_item');
+        Schema::dropIfExists('foods_menu');
     }
 };

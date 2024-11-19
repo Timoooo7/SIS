@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->tinyInteger('cashier_id');
             $table->tinyInteger('stand_id');
-            $table->tinyInteger('menu_id');
-            $table->tinyInteger('amount');
             $table->integer('discount')->default(0);
             $table->integer('transaction');
             $table->string('customer')->nullable();

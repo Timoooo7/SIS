@@ -1,6 +1,12 @@
-<x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
+<x-auth-layout>
+    <h4 class="text-primary-emphasis border-secondary border-bottom pb-3">{{ 'Welcome ' . Auth::user()->name . '!' }}
+    </h4>
+
+    <div class="mb-4" style="text-align: justify;">
+        {{ 'Thanks for signing up! You are logged in. ' }}
+        {{ 'Before getting started, please confirm your email by ' }} <b>{{ 'click the link' }}</b>
+        {{ ' we have sent to ' }} <b>{{ Auth::user()->email . '.' }}</b>
+        {{ ' If you didn\'t receive the email, we will gladly send you another.' }}
     </div>
 
     @if (session('status') == 'verification-link-sent')
@@ -9,23 +15,23 @@
         </div>
     @endif
 
-    <div class="mt-4 flex items-center justify-between">
-        <form method="POST" action="{{ route('verification.send') }}">
+    <div class="mt-4">
+        <form id="formLogout" method="POST" action="{{ route('logout') }}">
             @csrf
 
-            <div>
-                <x-primary-button>
-                    {{ __('Resend Verification Email') }}
-                </x-primary-button>
-            </div>
         </form>
 
-        <form method="POST" action="{{ route('logout') }}">
+        <form id="formVerification" method="POST" action="{{ route('verification.send') }}">
             @csrf
 
-            <button type="submit" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        </form>
+        <div class="btn-group btn-group-sm" style="width: 100%">
+            <button form="formLogout" type="submit" class="btn btn-secondary px-3">
                 {{ __('Log Out') }}
             </button>
-        </form>
+            <button form="formVerification" class="btn btn-primary px-3" type="submit">
+                {{ __('Resend Verification Email') }}
+            </button>
+        </div>
     </div>
-</x-guest-layout>
+</x-auth-layout>

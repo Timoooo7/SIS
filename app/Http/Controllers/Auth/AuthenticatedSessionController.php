@@ -25,7 +25,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        $request->flash();
         $findUserMail = User::where('email', '=', $request->email)->first();
+        if (!$findUserMail) {
+            return redirect()->route('login')->with('notif', ['type' => 'warning', 'message' => 'Can not find account with email ' . $request->email . '. Please register your account first.']);
+        }
 
         if (!$findUserMail->password) {
             return redirect()->route('register.google', ['id' => $findUserMail->id_google])->with('notif', ['type' => 'warning', 'message' => 'You must complete the registration before Login.']);
@@ -38,7 +42,7 @@ class AuthenticatedSessionController extends Controller
         if (Auth::user()->roles_id !== null) {
             return redirect()->intended(route('dashboard', absolute: false))->with('notif', ['type' => 'info', 'message' => 'Hi ' . Auth::user()->name . ', welcome to SEEO Information System']);
         } else {
-            return redirect()->intended(route('intro', absolute: false))->with('notif', ['type' => 'info', 'message' => 'Hi ' . Auth::user()->name . ', welcome to Blaterian']);
+            return redirect()->intended(route('shop', absolute: false))->with('notif', ['type' => 'info', 'message' => 'Hi ' . Auth::user()->name . ', welcome to Blaterian']);
         }
     }
 

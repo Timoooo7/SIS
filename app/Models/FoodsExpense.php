@@ -45,7 +45,7 @@ class FoodsExpense extends Model
      */
     public function category_detail()
     {
-        return $this->category == 'stand expense' ? $this->stand : $this->program;
+        return $this->category == 'stand expense' ? $this->stand : $this->withdraw;
     }
 
     /**
@@ -57,10 +57,10 @@ class FoodsExpense extends Model
     }
 
     /**
-     * The program details that has the stand income.
+     * The seeo cash in details that has the stand income.
      */
-    public function program(): BelongsTo
+    public function withdraw(): BelongsTo
     {
-        return $this->belongsTo(Program::class, 'category_id');
+        return $this->belongsTo(CashInItem::class, 'category_id');
     }
 }

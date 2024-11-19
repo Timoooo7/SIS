@@ -1,58 +1,82 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+<x-auth-layout>
+    <div class="row px-2 ">
+        <div class="col-12 border-secondary border-bottom d-flex pb-1 mb-3 px-0">
+            <span class="h4 text-primary-emphasis my-auto me-auto">{{ 'Login' }}</span>
+            <a class="fs-6 " href="{{ route('register') }}"><button
+                    class="btn btn-sm btn-light text-primary">REGISTER</button></a>
+        </div>
+    </div>
 
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
         <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required
-                autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div class="row">
+            <div class="col-3 col-md-4">
+                <label for="email" class="form-label my-1">Email</label>
+            </div>
+            <div class="col-9 col-md-8">
+                <input type="text" class="form-control form-control-sm" name="email" id="email"
+                    value="{{ old('email') }}" autocomplete="username"required>
+                <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            </div>
         </div>
 
         <!-- Password -->
-        <div class="mt-1">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="idlucu" class="block mt-1 w-full" type="password" name="password" required
-                autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Show Password -->
-        <div class="block mt-2">
-            <label for="show_password_1" class="inline-flex items-center">
-                <input id="show_password_1" type="checkbox" role="switch"
-                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
-                    onchange="show_password('idlucu')">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Show Password') }}</span>
-            </label>
+        <div class="row mt-2">
+            <div class="col-3 col-md-4">
+                <label for="password" class="form-label my-1">Password</label>
+            </div>
+            <div class="col-9 col-md-8">
+                <div class="input-group input-group-sm">
+                    <input type="password" class="form-control form-control-sm" name="password" id="password"
+                        value="{{ old('password') }}" autocomplete="password" required>
+                    <button type="button" class="btn bg-light text-secondary"
+                        onclick="show_password('password','password_icon')">
+                        <i class="bi bi-eye-slash-fill" id="password_icon"></i>
+                    </button>
+                </div>
+                <x-input-error :messages="$errors->get('password')" class="mt-2" />
+            </div>
         </div>
 
         <!-- Remember Me -->
-        <div class="block mt-2">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox"
-                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
+        <div class="row justify-content-start mt-2">
+            <div class="col-12 ">
+                <label for="remember_me" class="text-secondary">
+                    <input id="remember_me" type="checkbox" name="remember"
+                        class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
+                    <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
+                </label>
+            </div>
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
+        <div class="row justify-content-center mt-4">
+            <div class="col-auto">
+                <div class="input-group input-group-sm shadow-sm">
+                    <a class="link-secondary text-decoration-none btn btn-sm btn-light text-sm"
+                        href="{{ route('password.request') }}">
+                        {{ __('Forget password?') }}
+                    </a>
+                    <button class="btn btn-sm btn-primary px-3">
+                        {{ __('Login') }}<i class="bi bi-box-arrow-in-right border-start border-1 ms-1 ps-1"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     </form>
-</x-guest-layout>
+
+    <div class="d-flex justify-content-between align-items-center py-4">
+        <div class="border w-25"></div>
+        <div class="f-6">or Login with</div>
+        <div class="border w-25"></div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <a href="{{ route('google.auth') }}" class="btn btn-sm btn-outline-primary shadow-sm mx-20">
+                Google Account <i class="bi bi-google border-start border-2 border-primary ms-1 ps-1"></i></a>
+        </div>
+    </div>
+
+</x-auth-layout>

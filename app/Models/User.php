@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -27,7 +28,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'phone',
         'roles_id',
-        'proker_id',
+        'profile_image',
         'email_verified_at',
     ];
 
@@ -68,7 +69,9 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * 
      * The roles that has the user.
+     * 
      */
     public function roles(): BelongsTo
     {
@@ -76,7 +79,9 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * 
      * The program that belong to the user.
+     * 
      */
     public function program(): HasOne
     {
@@ -84,18 +89,61 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * The department that belong to the user as manager.
+     * 
+     * The product that in charge of this  user.
+     * 
      */
-    public function department(): HasOne
+    public function product(): HasMany
+    {
+        return $this->hasMany(GoodsProduct::class, 'pic_id');
+    }
+
+    /**
+     * 
+     * The department that belong to the user as manager.
+     * 
+     */
+    public function manager(): HasOne
     {
         return $this->hasOne(Department::class, 'manager_id');
     }
 
     /**
+     * 
+     * The department that belong to the user as manager.
+     * 
+     */
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Department::class, 'department_id');
+    }
+
+    /**
+     * 
      * The stand that user in charge of.
+     * 
      */
     public function stand(): HasOne
     {
         return $this->hasOne(Stand::class, 'pic_id');
+    }
+
+    /**
+     * 
+     * Contribution that belongs to this employee.
+     * 
+     */
+    public function contribution(): HasOne
+    {
+        return $this->hasOne(Contribution::class, 'user_id');
+    }
+
+    /**
+     * 
+     * Contribution Receipt that validated by this user as financial.
+     */
+    public function contribution_receipt(): HasMany
+    {
+        return $this->hasMany(ContributionReceipt::class, 'financial_id');
     }
 }

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('blaterian_balance', function (Blueprint $table) {
+        Schema::create('blaterian_food_balance', function (Blueprint $table) {
             $table->id();
             $table->integer('balance')->default(0);
             $table->integer('expense')->default(0);
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('blaterian_balance');
+        Schema::dropIfExists('blaterian_food_balance');
     }
 };

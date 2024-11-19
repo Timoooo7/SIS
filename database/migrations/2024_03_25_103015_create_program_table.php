@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('expense')->default(0);
             $table->integer('disbursement')->default(0);
             $table->integer('financial_id')->default(0);
+            $table->integer('staff_lock')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });

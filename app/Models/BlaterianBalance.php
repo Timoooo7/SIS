@@ -14,7 +14,7 @@ class BlaterianBalance extends Model
     /**
      * Define table name
      */
-    protected $table = 'blaterian_balance';
+    protected $table = 'blaterian_food_balance';
 
     /**
      * The attributes that are mass assignable.

@@ -1,86 +1,108 @@
-<x-guest-layout>
+<x-auth-layout>
+    <div class="row px-2 ">
+        <div class="col-12 border-secondary border-bottom d-flex pb-1 mb-3 px-0">
+            <h4 class="h4 text-primary-emphasis my-auto me-auto">{{ 'REGISTER' }}</h4>
+            <a class="fs-6 float-end" href="{{ route('login') }}"><button class="btn btn-sm btn-light">LOGIN</button></a>
+        </div>
+    </div>
     <form method="POST" action="{{ route('register') }}">
         @csrf
         <!-- Name -->
-        <div class="row">
-            <div class="col">
-                <div>
-                    <x-input-label for="name" :value="__('Name')" />
-                    <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')"
-                        required autofocus autocomplete="name" />
-                    <x-input-error :messages="$errors->get('name')" class="mt-2" />
-                </div>
+        <div class="row mt-2">
+            <div class="col-3 col-md-4">
+                <label for="name" class="form-label my-1">Name</label>
+            </div>
+            <div class="col-9 col-md-8">
+                <input type="text" class="form-control form-control-sm" name="name" id="name"
+                    value="{{ old('name') }}" autocomplete="name" required>
+                <x-input-error :messages="$errors->get('name')" class="mt-2" />
             </div>
         </div>
         <!-- Email Address -->
-        <div class="row">
-            <div class="col">
-                <div>
-                    <x-input-label for="email" :value="__('Email')" />
-                    <x-text-input id="email" class="block mt-1 w-full" type="email" name="email"
-                        :value="old('email')" required autocomplete="username" />
-                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
-                </div>
+        <div class="row mt-2">
+            <div class="col-3 col-md-4">
+                <label for="email" class="form-label my-1">Email</label>
+            </div>
+            <div class="col-9 col-md-8">
+                <input type="text" class="form-control form-control-sm" name="email" id="email"
+                    value="{{ old('email') }}" autocomplete="username"required>
+                <x-input-error :messages="$errors->get('email')" class="mt-2" />
             </div>
         </div>
         <!-- Phone -->
-        <div class="row">
-            <div>
-                <x-input-label for="phone" :value="__('Phone')" />
-                <x-text-input id="phone" class="block mt-1 w-full" type="number" name="phone" :value="old('phone')"
-                    required autofocus autocomplete="phone" />
+        <div class="row mt-2">
+            <div class="col-3 col-md-4">
+                <label for="phone" class="form-label my-1">Phone</label>
+            </div>
+            <div class="col-9 col-md-8">
+                <input type="number" class="form-control form-control-sm" name="phone" id="phone"
+                    value="{{ old('phone') }}" autocomplete="username"required>
                 <x-input-error :messages="$errors->get('phone')" class="mt-2" />
             </div>
         </div>
         <!-- Password -->
-        <div class="row">
-            <div class="col">
-                <div>
-                    <x-input-label for="password" :value="__('Password')" />
-
-                    <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required
-                        autocomplete="new-password" />
-
-                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                </div>
-                <div class="form-check form-switch mt-1">
-                    <input class="form-check-input" type="checkbox" role="switch" id="show_password_3"
-                        onchange="show_password('password')">
-                    <label class="form-check-label text-secondary text-sm" for="show_password_3">Show Password</label>
-                </div>
+        <div class="row mt-2">
+            <div class="col-3 col-md-4">
+                <label for="password" class="form-label my-1">Password</label>
             </div>
-
+            <div class="col-9 col-md-8">
+                <div class="input-group input-group-sm">
+                    <input type="password" class="form-control form-control-sm" name="password" id="password"
+                        value="{{ old('password') }}" autocomplete="password" required>
+                    <button type="button" class="btn bg-light text-secondary"
+                        onclick="show_password('password','password_icon')">
+                        <i class="bi bi-eye-slash-fill" id="password_icon"></i>
+                    </button>
+                </div>
+                <x-input-error :messages="$errors->get('password')" class="mt-2" />
+            </div>
         </div>
         <!-- Confirm Password -->
-        <div class="row">
-            <div class="col">
-                <div>
-                    <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-                    <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password"
-                        name="password_confirmation" required autocomplete="new-password" />
-
-                    <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        <div class="row mt-2">
+            <div class="col-3 col-md-4">
+                <label for="password_confirmation" class="form-label my-1">Confirm <span
+                        class="d-none d-md-inline">Password</span></label>
+            </div>
+            <div class="col-9 col-md-8">
+                <div class="input-group input-group-sm">
+                    <input type="password" class="form-control form-control-sm" name="password_confirmation"
+                        id="password_confirmation" value="{{ old('password_confirmation') }}"
+                        autocomplete="password_confirmation" required>
+                    <button type="button" class="btn bg-light text-secondary"
+                        onclick="show_password('password_confirmation','password_confirmation_icon')">
+                        <i class="bi bi-eye-slash-fill" id="password_confirmation_icon"></i>
+                    </button>
                 </div>
-                <div class="form-check form-switch mt-1">
-                    <input class="form-check-input" type="checkbox" role="switch" id="show_password_4"
-                        onchange="show_password('password_confirmation')">
-                    <label class="form-check-label text-secondary text-sm" for="show_password_4">Show
-                        Password</label>
-                </div>
+                <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
             </div>
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
+        <div class="row justify-content-center mt-4">
+            <div class="col-auto">
+                <div class="input-group input-group-sm shadow-sm">
+                    <a class="link-secondary text-decoration-none btn btn-sm btn-light text-sm"
+                        href="{{ route('login') }}">
+                        {{ __('Already registered?') }}
+                    </a>
 
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
+                    <button class="btn btn-primary px-3">
+                        {{ __('Register') }}<i class="bi bi-person-fill-add border-start border-1 ms-1 ps-1"></i>
+                    </button>
+                </div>
+            </div>
         </div>
-
     </form>
-</x-guest-layout>
+
+    <div class="d-flex justify-content-between align-items-center py-4">
+        <div class="border w-25"></div>
+        <div class="f-6">or Register with</div>
+        <div class="border w-25"></div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <a href="{{ route('google.auth') }}" class="btn btn-sm btn-outline-primary shadow mx-20">
+                Google Account <i class="bi bi-google border-start border-2 border-primary ms-1 ps-1"></i></a>
+        </div>
+    </div>
+</x-auth-layout>

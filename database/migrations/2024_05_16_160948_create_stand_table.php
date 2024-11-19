@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('name');
             $table->string('place')->nullable();
             $table->date('date')->nullable();
-            $table->time('time')->nullable();
             $table->integer('pic_id');
             $table->integer('expense')->nullable();
             $table->integer('income')->nullable();

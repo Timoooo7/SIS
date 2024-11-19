@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
@@ -27,6 +26,8 @@ class Program extends Model
     protected $fillable = [
         'name',
         'department_id',
+        'financial_id',
+        'staff_lock',
         'pic_id',
         'budget_approval',
         'expense_approval',
@@ -59,6 +60,14 @@ class Program extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'pic_id');
+    }
+
+    /**
+     * The user that is staff of this program.
+     */
+    public function staff(): HasMany
+    {
+        return $this->hasMany(ProgramStaff::class, 'program_id');
     }
 
     /**

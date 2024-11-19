@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->integer('program_id');
+            $table->integer('letter_id');
             $table->integer('financial_id');
             $table->integer('price');
             $table->string('reciept');

@@ -28,9 +28,9 @@ class Stand extends Model
         'name',
         'place',
         'date',
-        'time',
         'pic_id',
         'menu_lock',
+        'sale_validation',
         'expense',
         'income',
         'profit',
@@ -71,11 +71,19 @@ class Stand extends Model
     }
 
     /**
-     * The person that in charge of the stand.
+     * The person that validate the stand menu.
      */
     public function menu_validator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'menu_lock');
+    }
+
+    /**
+     * The person that validate the stand income sales.
+     */
+    public function sales_validator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'sale_validation');
     }
 
     /**

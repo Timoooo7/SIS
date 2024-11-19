@@ -19,7 +19,10 @@ return new class extends Migration
             $table->string('phone')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
+            $table->string('profile_image')->nullable();
             $table->integer('roles_id')->nullable();
+            $table->integer('department_id')->nullable();
+            $table->integer('level')->nullable();
             $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();

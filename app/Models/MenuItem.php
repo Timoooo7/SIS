@@ -18,7 +18,7 @@ class MenuItem extends Model
     /**
      * Define table name
      */
-    protected $table = 'menu_item';
+    protected $table = 'foods_menu';
 
     /**
      * The attributes that are mass assignable.
@@ -34,6 +34,7 @@ class MenuItem extends Model
         'price',
         'stand_id',
         'sale',
+        'stock',
     ];
 
     /**
